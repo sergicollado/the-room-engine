@@ -1,3 +1,3 @@
 # THE ROOM ENGINE
 
-Little library to write little tales.
+Little library to storytelling.
