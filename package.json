@@ -1,0 +1,14 @@
+{
+  "name": "theroomengine",
+  "version": "0.0.1",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "sergi_py",
+  "license": "ISC",
+  "dependencies": {
+    "jest": "^29.2.2"
+  }
+}
