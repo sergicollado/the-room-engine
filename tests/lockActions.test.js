@@ -17,10 +17,10 @@ describe('Actions requirements and locks', () => {
   let theRoomEngine;
   let player;
   beforeEach(() => {
-    const firstPlace = Place(
-      id = "firstPlace",
-      description = "first place description",
-      objects= [
+    const firstPlace = Place({
+      id : "firstPlace",
+      description : "first place description",
+      objects: [
         {id: "table", description: "first place description"},
         {id: "door", description: "it's a door", features:[Feature.OPENABLE], openMessage: "the door is opened now you can see more things", openDescription: "From this door we can now watch a shadow"},
         {
@@ -33,12 +33,12 @@ describe('Actions requirements and locks', () => {
           useWithActions: [{id:"key", action: ActionType.UNLOCK}]
         },
         {id: "key", description: "a key", features:[Feature.USABLE]}
-      ]);
+      ]});
 
-    const secondPlace = Place(
-        id = "secondPlace",
-        description = "secondPlace description",
-        objects= [{
+    const secondPlace = Place({
+        id : "secondPlace",
+        description : "secondPlace description",
+        objects: [{
           id: "book",
           description: "book description",
           readableText: "book text content when is read",
@@ -47,7 +47,7 @@ describe('Actions requirements and locks', () => {
           id: "knife",
           description: "knife description",
           features:[Feature.PORTABLE]
-        }]);
+        }]});
 
     player = Player(firstPlace, [], dialogs);
     theRoomEngine = TheRoomEngine(player, [firstPlace,secondPlace], dialogs);

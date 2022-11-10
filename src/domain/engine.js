@@ -1,12 +1,12 @@
 
-TheRoomEngine = (player, places, dialogs) => {
-  moveTo = (placeId) => {
+const TheRoomEngine = (player, places, dialogs) => {
+  const moveTo = (placeId) => {
     const nextPlace = places.find(({id}) => { return id===placeId});
     if (!nextPlace) {
       return dialogs.UNKNOWN_PLACE_TO_GO;
     }
     player.goToPlace(nextPlace);
-    return nextPlace.initialDescription || description;
+    return nextPlace.initialDescription || nextPlace.description;
   }
 
   const getCurrentPlace = () => {

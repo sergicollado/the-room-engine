@@ -5,14 +5,14 @@ exports.init = () => {
   return dialogs.INIT;
 }
 
-const theChaise = Place(
-  id = "theChaise",
-  description = dialogs.THE_CHAISE.DESCRIPTION,
-  objects= [{id: "table", description: dialogs.THE_CHAISE.OBJECTS.TABLE.DESCRIPTION}]);
-const theTable = Place(
-    id = "theTable",
-    description = dialogs.THE_TABLE.DESCRIPTION,
-    objects= [{
+const theChaise = Place({
+  id: "theChaise",
+  description: dialogs.THE_CHAISE.DESCRIPTION,
+  objects: [{id: "table", description: dialogs.THE_CHAISE.OBJECTS.TABLE.DESCRIPTION}] });
+const theTable = Place({
+    id : "theTable",
+    description : dialogs.THE_TABLE.DESCRIPTION,
+    objects: [{
       id: "book",
       description: dialogs.THE_TABLE.OBJECTS.BOOK.DESCRIPTION,
       text: dialogs.THE_TABLE.OBJECTS.BOOK.TEXT,
@@ -21,9 +21,9 @@ const theTable = Place(
       id: "knife",
       description: dialogs.THE_TABLE.OBJECTS.KNIFE.DESCRIPTION,
       isPortable: true
-    }]);
+    }]});
 
-const player = Player(theChaise, []);
+// const player = Player(theChaise, []);
 
 const places = [
   theChaise, theTable

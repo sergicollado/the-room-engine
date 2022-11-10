@@ -11,11 +11,11 @@ const ActionType = {
   UNLOCK: "UNLOCK",
 }
 
-InteractiveObject = (
+const InteractiveObject = (
   id,
   description,
   features=[],
-  messages={openMessage, openDescription, readableText, lockedMessage},
+  messages={openMessage:"", openDescription:"", readableText:"", lockedMessage:""},
   useWithActions=[]) => {
   const is = (feature) => {
       return features.includes(feature) ;

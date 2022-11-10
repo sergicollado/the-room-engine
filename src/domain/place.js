@@ -1,6 +1,6 @@
 const {interactiveObjectMapper} = require("../shared/interactiveObjectsMapper");
 
-const Place = (id, description, objects=[]) => {
+const Place = ({id, description, objects=[]}) => {
   const interactiveObjects = objects.map(interactiveObjectMapper);
 
   const getObject = (idObject) =>  {

@@ -12,7 +12,6 @@ describe('Initial state', () => {
   })
 
   test('app should return init message when init function is called', () => {
-    const expectedMessage = "these are my firsts steps";
     expect(app.init()).toBe(dialogs.INIT);
   });
 

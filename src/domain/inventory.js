@@ -1,4 +1,4 @@
-Inventory  = (data) => {
+const Inventory  = (data) => {
   const contains = (idObject) => {
     return data.some(({id}) => id===idObject)
   }
