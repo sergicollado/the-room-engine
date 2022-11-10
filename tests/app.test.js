@@ -7,8 +7,8 @@ describe('Initial state', () => {
   let theRoomEngine;
   let player;
   beforeEach(() => {
-    player = new Player(initialPlace, []);
-    theRoomEngine = new TheRoomEngine(player, places, dialogs);
+    player = Player(initialPlace, []);
+    theRoomEngine = TheRoomEngine(player, places, dialogs);
   })
 
   test('app should return init message when init function is called', () => {

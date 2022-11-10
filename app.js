@@ -1,15 +1,15 @@
 const dialogs = require('./dialogs').dialogs;
-const {Player, Place, TheRoomEngine} = require("./domain");
+const {Player, Place, TheRoomEngine} = require("./src/domain");
 
 exports.init = () => {
   return dialogs.INIT;
 }
 
-const theChaise = new Place(
+const theChaise = Place(
   id = "theChaise",
   description = dialogs.THE_CHAISE.DESCRIPTION,
   objects= [{id: "table", description: dialogs.THE_CHAISE.OBJECTS.TABLE.DESCRIPTION}]);
-const theTable = new Place(
+const theTable = Place(
     id = "theTable",
     description = dialogs.THE_TABLE.DESCRIPTION,
     objects= [{
@@ -23,7 +23,7 @@ const theTable = new Place(
       isPortable: true
     }]);
 
-const player = new Player(theChaise, []);
+const player = Player(theChaise, []);
 
 const places = [
   theChaise, theTable

@@ -1,4 +1,4 @@
-const { Player, TheRoomEngine, Place, Feature } = require("../domain");
+const { Player, TheRoomEngine, Place, Feature, ActionType } = require("../src/domain");
 
 
 const dialogs = {
@@ -12,15 +12,26 @@ const dialogs = {
   OPEN_MESSAGE: "message something is open",
   NOT_OPENABLE_MESSAGE: "message when something are not openable",
 }
-const firstPlace = new Place(
+
+const firstPlace = Place(
   id = "firstPlace",
   description = "first place description",
   objects= [
     {id: "table", description: "first place description"},
     {id: "note", description: "a readable an portable note", readableText: "this is a note Text",  features:[Feature.READABLE, Feature.PORTABLE]},
-    {id: "door", description: "it's a door", features:[Feature.OPENABLE], openMessage: "the door is open know you can see more things", openedDescription: "From this door we can now watch a shadow"}
+    {id: "door", description: "it's a door", features:[Feature.OPENABLE], openMessage: "the door is opened now you can see more things", openDescription: "From this door we can now watch a shadow"},
+    {
+      id: "doorToUnlock",
+      description: "it's a locked door",
+      features:[Feature.OPENABLE, Feature.LOCKED],
+      lockedMessage:"You need a key to open this door",
+      openMessage: "the door after was locked  and NOW is open",
+      openDescription: "From this door we can now watch a little carrousel",
+      useWithActions: [{id:"key", action: ActionType.UNLOCK}]
+    },
+    {id: "key", description: "a key", features:[Feature.USABLE]}
   ]);
-const secondPlace = new Place(
+const secondPlace = Place(
     id = "secondPlace",
     description = "secondPlace description",
     objects= [{
@@ -35,7 +46,6 @@ const secondPlace = new Place(
     }]);
 
 const initialPlace = firstPlace;
-const player = new Player(firstPlace, []);
 
 const places = [
   firstPlace, secondPlace
@@ -45,8 +55,8 @@ describe('Actions in a place', () => {
   let theRoomEngine;
   let player;
   beforeEach(() => {
-    player = new Player(initialPlace, [], dialogs);
-    theRoomEngine = new TheRoomEngine(player, places, dialogs);
+    player = Player(initialPlace, [], dialogs);
+    theRoomEngine = TheRoomEngine(player, places, dialogs);
   })
   test('the player can see an object', () => {
     const expectedObjectDescription = "first place description";
@@ -131,30 +141,3 @@ describe('Actions in a place', () => {
   })
 });
 
-describe('Actions requirements and locks', () => {
-  let theRoomEngine;
-  let player;
-  beforeEach(() => {
-    player = new Player(initialPlace, [], dialogs);
-    theRoomEngine = new TheRoomEngine(player, places, dialogs);
-  })
-
-  test('the player can open openable things', () => {
-    const expectedObjectDescription = "the door is open know you can see more things";
-    const openDoorMessage = player.open("door");
-    expect(openDoorMessage).toBe(expectedObjectDescription);
-  })
-
-  test('when player try to open not openable things return suitable message', () => {
-    const expectedObjectDescription = "message when something are not openable";
-    const somethingNotOpenableMessage = player.open("table");
-    expect(somethingNotOpenableMessage).toBe(expectedObjectDescription);
-  })
-
-  test('the player see new descriptions when something is open', () => {
-    const expectedObjectDescription = "From this door we can now watch a shadow";
-    player.open("door");
-    const openDoorMessage = player.see("door");
-    expect(openDoorMessage).toBe(expectedObjectDescription);
-  })
-});
