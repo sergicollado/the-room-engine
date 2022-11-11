@@ -1,5 +1,16 @@
+const { Place } = require("./place");
+const { Player } = require("./player");
+const {Inventory} = require("./inventory");
 
-const TheRoomEngine = (player, places, dialogs) => {
+const TheRoomEngine = (configPlaces, dialogs, currentInventory=[]) => {
+  const places = configPlaces.map((config) => Place(config));
+  const inventory = Inventory(currentInventory);
+  const player = Player(places[0], inventory, dialogs )
+
+  const getPlayer = () => {
+    return player;
+  }
+
   const moveTo = (placeId) => {
     const nextPlace = places.find(({id}) => { return id===placeId});
     if (!nextPlace) {
@@ -13,9 +24,29 @@ const TheRoomEngine = (player, places, dialogs) => {
     return player.getCurrentPlace();
   }
 
+  const help = () => {
+    const toGoDescriptions = places.map(({smallDescription}) => smallDescription).join(", ");
+    const placesToGoMessage = `${dialogs.HELP_PLAYER_CAN_GO} ${toGoDescriptions}`;
+
+    const toSeeDescriptions = getCurrentPlace().getObjectsDescription();
+    const thingsToSee = `${dialogs.HELP_PLAYER_CAN_SEE} ${toSeeDescriptions}`;
+
+    const inYourInventory = inventoryHelp();
+    return `${placesToGoMessage}, ${thingsToSee}.${dialogs.HELP_PLAYER_CAN_DO}. ${inYourInventory}`;
+  }
+
+  const inventoryHelp = () => {
+    const inventoryDescriptions = inventory.getContentDescription();
+    const inYourInventory = `${dialogs.HELP_PLAYER_INVENTORY} ${inventoryDescriptions}`;
+    return inYourInventory;
+  }
+
   return {
+    getPlayer,
     moveTo,
-    getCurrentPlace
+    getCurrentPlace,
+    help,
+    inventoryHelp
   }
 }
 

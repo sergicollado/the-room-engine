@@ -5,6 +5,7 @@
   OPENABLE: "OPENABLE",
   OPEN: "OPEN",
   LOCKED: "LOCKED",
+  HIDDEN: "HIDDEN",
 }
 
 const ActionType = {
@@ -14,6 +15,7 @@ const ActionType = {
 const InteractiveObject = (
   id,
   description,
+  smallDescription,
   features=[],
   messages={openMessage:"", openDescription:"", readableText:"", lockedMessage:""},
   useWithActions=[]) => {

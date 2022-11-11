@@ -1,5 +1,5 @@
-const app = require('../app');
-const dialogs = require('../dialogs').dialogs;
+const app = require('../../demo/app');
+const dialogs = require('../../demo/dialogs').dialogs;
 
 const { Player, TheRoomEngine, initialPlace, places } = app;
 
@@ -7,8 +7,8 @@ describe('Initial state', () => {
   let theRoomEngine;
   let player;
   beforeEach(() => {
-    player = Player(initialPlace, []);
-    theRoomEngine = TheRoomEngine(player, places, dialogs);
+    theRoomEngine = TheRoomEngine(places, dialogs);
+    player = theRoomEngine.getPlayer();
   })
 
   test('app should return init message when init function is called', () => {

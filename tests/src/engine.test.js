@@ -1,4 +1,4 @@
-const { Player, TheRoomEngine, Place, Feature, ActionType } = require("../src/domain");
+const { TheRoomEngine, Feature, ActionType } = require("../../src/domain");
 
 
 const dialogs = {
@@ -11,29 +11,37 @@ const dialogs = {
   CANNOT_READ_THIS: "message when player is trying to read something not readable",
   OPEN_MESSAGE: "message something is open",
   NOT_OPENABLE_MESSAGE: "message when something are not openable",
+  HELP_PLAYER_CAN_GO: "You can go to: ",
+  HELP_PLAYER_CAN_SEE: "you can see: ",
+  HELP_PLAYER_CAN_DO: "you could open, get, read and see things too",
+  HELP_PLAYER_INVENTORY: "In your inventory you have:",
 }
 
-const firstPlace = Place({
+const firstPlace = {
   id : "firstPlace",
   description : "first place description",
+  smallDescription: "the First place",
   objects: [
-    {id: "table", description: "first place description"},
-    {id: "note", description: "a readable an portable note", readableText: "this is a note Text",  features:[Feature.READABLE, Feature.PORTABLE]},
-    {id: "door", description: "it's a door", features:[Feature.OPENABLE], openMessage: "the door is opened now you can see more things", openDescription: "From this door we can now watch a shadow"},
+    {id: "table", description: "first place description", smallDescription: "a table",},
+    {id: "note", description: "a readable an portable note", smallDescription: "a paper note", readableText: "this is a note Text",  features:[Feature.READABLE, Feature.PORTABLE]},
+    {id: "door", description: "it's a door", smallDescription: "a little door",features:[Feature.OPENABLE], openMessage: "the door is opened now you can see more things", openDescription: "From this door we can now watch a shadow"},
     {
       id: "doorToUnlock",
       description: "it's a locked door",
+      smallDescription: "a locked door",
       features:[Feature.OPENABLE, Feature.LOCKED],
       lockedMessage:"You need a key to open this door",
       openMessage: "the door after was locked  and NOW is open",
       openDescription: "From this door we can now watch a little carrousel",
       useWithActions: [{id:"key", action: ActionType.UNLOCK}]
     },
-    {id: "key", description: "a key", features:[Feature.USABLE]}
-  ]});
-const secondPlace = Place({
+    {id: "key", smallDescription: "a key", description: "a key", features:[Feature.USABLE, Feature.HIDDEN]}
+  ]};
+
+const secondPlace = {
     id : "secondPlace",
     description : "secondPlace description",
+    smallDescription: "the Second Place",
     objects: [{
       id: "book",
       description: "book description",
@@ -43,20 +51,69 @@ const secondPlace = Place({
       id: "knife",
       description: "knife description",
       features:[Feature.PORTABLE]
-    }]});
+    }]};
 
 const initialPlace = firstPlace;
 
 const places = [
   firstPlace, secondPlace
 ]
+describe('Help', () => {
+  const placeOne = {
+    id: 'placeOne',
+    description: 'placeOne description',
+    smallDescription: 'placeOne small description',
+    objects: [
+      {id: "table", description: "table description", smallDescription: "a table",},
+      {id: "door", description: "door description", smallDescription: "a door",},
+    ]
+  };
+  const placeTwo = {
+    id: 'placeTwo',
+    description: 'placeTwo description',
+    smallDescription: 'placeTwo small description',
+    objects: [
+      {id: "book", description: "book description", smallDescription: "a book",},
+      {id: "key", description: "key description", smallDescription: "a key",},
+    ]
+  };
+  const places = [placeOne, placeTwo];
+
+  const currentInventory = [
+    {id: "knife", description: "knife description", smallDescription: "a knife",features:[Feature.PORTABLE]},
+    {id: "ring", description: "ring description", smallDescription: "a ring", features:[Feature.PORTABLE]},
+  ]
+
+  let theRoomEngine;
+  beforeEach(() => {
+    theRoomEngine = TheRoomEngine(places, dialogs, currentInventory);
+  })
+
+  test('Engine should response with current place info, to help player', ()=> {
+    const placesToGoMessage = `${dialogs.HELP_PLAYER_CAN_GO} ${placeOne.smallDescription}, ${placeTwo.smallDescription}`;
+    const thingsToSee = `${dialogs.HELP_PLAYER_CAN_SEE} a table, a door`;
+    const inYourInventory = `${dialogs.HELP_PLAYER_INVENTORY} a knife, a ring`;
+
+    const helpMessage = theRoomEngine.help();
+
+    const expectedHelpMessage = `${placesToGoMessage}, ${thingsToSee}.${dialogs.HELP_PLAYER_CAN_DO}. ${inYourInventory}`;
+    expect(helpMessage).toBe(expectedHelpMessage);
+  })
+
+  test('Engine should response info about player have in her inventory', ()=> {
+    const expectedHelpMessage = `${dialogs.HELP_PLAYER_INVENTORY} a knife, a ring`;
+
+    const helpMessage = theRoomEngine.inventoryHelp();
+    expect(helpMessage).toBe(expectedHelpMessage);
+  });
+});
 
 describe('Actions in a place', () => {
   let theRoomEngine;
   let player;
   beforeEach(() => {
-    player = Player(initialPlace, [], dialogs);
-    theRoomEngine = TheRoomEngine(player, places, dialogs);
+    theRoomEngine = TheRoomEngine(places, dialogs, []);
+    player = theRoomEngine.getPlayer();
   })
   test('the player can see an object', () => {
     const expectedObjectDescription = "first place description";

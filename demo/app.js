@@ -1,5 +1,5 @@
 const dialogs = require('./dialogs').dialogs;
-const {Player, Place, TheRoomEngine} = require("./src/domain");
+const {Player, Place, TheRoomEngine} = require("../src/domain");
 
 exports.init = () => {
   return dialogs.INIT;

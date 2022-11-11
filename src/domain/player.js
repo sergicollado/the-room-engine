@@ -1,10 +1,8 @@
-const {Inventory} = require("./inventory");
 const {Feature} = require("./interactiveObjects");
 
-const Player = (currentPlace, inventoryData = [], dialogs) => {
+const Player = (currentPlace, inventory, dialogs) => {
 
   let place = currentPlace;
-  const inventory = Inventory(inventoryData);
 
   return {
     see: (idObject) => {

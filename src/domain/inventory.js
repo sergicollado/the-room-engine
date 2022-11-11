@@ -1,4 +1,5 @@
 const Inventory  = (data) => {
+
   const contains = (idObject) => {
     return data.some(({id}) => id===idObject)
   }
@@ -11,10 +12,14 @@ const Inventory  = (data) => {
     return data.find(({id}) => id===idObject)
   }
 
+  const getContentDescription = () => {
+    return data.map(({smallDescription}) => smallDescription).join(", ");
+  }
   return {
     contains,
     add,
-    get
+    get,
+    getContentDescription
   }
 };
 
