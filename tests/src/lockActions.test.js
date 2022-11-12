@@ -1,17 +1,5 @@
-const { Player, TheRoomEngine, Place, Feature, ActionType } = require("../../src/domain");
-
-
-const dialogs = {
-  SEE_AN_OBJECT_FROM_INVENTORY: "...see an object from inventory",
-  READ_AN_OBJECT_FROM_INVENTORY: "...read from the inventory",
-  UNKNOWN_PLACE_TO_GO: "Unknown place to go message",
-  GET_OBJECT: "message when player get a portable object and save to inventory",
-  CANNOT_SAVE_THIS: "message when player not able to get an object",
-  CANNOT_SEE_THIS: "message when player cannot see something",
-  CANNOT_READ_THIS: "message when player is trying to read something not readable",
-  OPEN_MESSAGE: "message something is open",
-  NOT_OPENABLE_MESSAGE: "message when something are not openable",
-}
+const { TheRoomEngine, Feature, ActionType } = require("../../src/domain");
+const {dialogs} = require("./dialogs");
 
 describe('Actions requirements and locks', () => {
   let theRoomEngine;
@@ -30,7 +18,9 @@ describe('Actions requirements and locks', () => {
           lockedMessage:"You need a key to open this door",
           openMessage: "the door after was locked  and NOW is open",
           openDescription: "From this door we can now watch a little carrousel",
-          useWithActions: [{id:"key", action: ActionType.UNLOCK}]
+          unlockMessage:"the key turns, and the door opens slowly, from there you can see a small carousel.",
+          errorUsing:"it doesn't seem to work",
+          useWithActions: [{id:"key", action: ActionType.UNLOCK}],
         },
         {id: "key", description: "a key", features:[Feature.USABLE]}
       ]};
@@ -86,17 +76,22 @@ describe('Actions requirements and locks', () => {
     const key = theRoomEngine.getCurrentPlace().getObject("key");
 
     const doorToUnlock = theRoomEngine.getCurrentPlace().getObject("doorToUnlock");
-    player.use(key).with(doorToUnlock);
+    const message = player.use(key).with(doorToUnlock);
 
+    const expectMessage = "the key turns, and the door opens slowly, from there you can see a small carousel.";
+    expect(message).toBe(expectMessage);
     expect(doorToUnlock.isNot(Feature.LOCKED)).toBe(true);
   })
 
   test('LOCKED objects CANNOT be opened with any object', () => {
     const table = theRoomEngine.getCurrentPlace().getObject("table");
-
     const doorToUnlock = theRoomEngine.getCurrentPlace().getObject("doorToUnlock");
-    player.use(table).with(doorToUnlock);
+
+    const message = player.use(table).with(doorToUnlock);
 
     expect(doorToUnlock.is(Feature.LOCKED)).toBe(true);
+
+    const expectMessage = "it doesn't seem to work";
+    expect(message).toBe(expectMessage);
   })
 });

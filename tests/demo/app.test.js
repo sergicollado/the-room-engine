@@ -1,7 +1,7 @@
 const app = require('../../demo/app');
 const dialogs = require('../../demo/dialogs').dialogs;
 
-const { Player, TheRoomEngine, initialPlace, places } = app;
+const { TheRoomEngine, initialPlace, places } = app;
 
 describe('Initial state', () => {
   let theRoomEngine;

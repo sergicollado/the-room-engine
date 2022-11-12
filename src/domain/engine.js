@@ -1,11 +1,14 @@
 const { Place } = require("./place");
 const { Player } = require("./player");
 const {Inventory} = require("./inventory");
+const { ActionType } = require("./actions");
+const {StoryPlots} = require("./storyPlots");
 
-const TheRoomEngine = (configPlaces, dialogs, currentInventory=[]) => {
+const TheRoomEngine = (configPlaces, dialogs, currentInventory=[], storyPlots=[]) => {
   const places = configPlaces.map((config) => Place(config));
   const inventory = Inventory(currentInventory);
   const player = Player(places[0], inventory, dialogs )
+  const plotsController = StoryPlots(storyPlots);
 
   const getPlayer = () => {
     return player;
@@ -17,7 +20,9 @@ const TheRoomEngine = (configPlaces, dialogs, currentInventory=[]) => {
       return dialogs.UNKNOWN_PLACE_TO_GO;
     }
     player.goToPlace(nextPlace);
-    return nextPlace.initialDescription || nextPlace.description;
+    const placePlotMessage = plotsController.getMovePlotMessage(placeId);
+
+    return placePlotMessage || nextPlace.description;
   }
 
   const getCurrentPlace = () => {

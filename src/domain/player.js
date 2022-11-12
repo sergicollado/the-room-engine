@@ -58,7 +58,7 @@ const Player = (currentPlace, inventory, dialogs) => {
     use: (interactiveObject) => {
       return {
         with: (interactiveObjectWith) => {
-          interactiveObjectWith.useWith(interactiveObject);
+          return interactiveObjectWith.useWith(interactiveObject);
         }
       }
     },

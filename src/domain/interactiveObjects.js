@@ -1,3 +1,4 @@
+const { ActionType } = require("./actions");
 
  const Feature = {
   READABLE: "READABLE",
@@ -8,16 +9,12 @@
   HIDDEN: "HIDDEN",
 }
 
-const ActionType = {
-  UNLOCK: "UNLOCK",
-}
-
 const InteractiveObject = (
   id,
   description,
   smallDescription,
   features=[],
-  messages={openMessage:"", openDescription:"", readableText:"", lockedMessage:""},
+  messages={openMessage:"", openDescription:"", readableText:"", lockedMessage:"", unlockMessage:"", errorUsing:""},
   useWithActions=[]) => {
   const is = (feature) => {
       return features.includes(feature) ;
@@ -30,7 +27,7 @@ const InteractiveObject = (
       return messages.openMessage;
     };
   const unlock = () => {
-    removeFeature(Feature.LOCKED)
+    removeFeature(Feature.LOCKED);
   };
 
   const getTryToOpenButLockedMessage= () => {
@@ -43,6 +40,7 @@ const InteractiveObject = (
   return {
     id,
     description,
+    smallDescription,
     getOpenMessage,
     unlock,
     is,
@@ -81,16 +79,16 @@ const InteractiveObject = (
       const {id, action} = useWithActions.find(({id}) => interactiveObject.id===id) || {};
 
       if(!id) {
-        return;
+        return messages.errorUsing;
       }
 
       if(action === ActionType.UNLOCK) {
         unlock()
+        return messages.unlockMessage
       }
     }
   }
 }
 
-exports.ActionType = ActionType;
 exports.Feature = Feature;
 exports.InteractiveObject = InteractiveObject;

@@ -1,0 +1,16 @@
+exports.dialogs = {
+  SEE_AN_OBJECT_FROM_INVENTORY: "...see an object from inventory",
+  READ_AN_OBJECT_FROM_INVENTORY: "...read from the inventory",
+  UNKNOWN_PLACE_TO_GO: "Unknown place to go message",
+  GET_OBJECT: "message when player get a portable object and save to inventory",
+  CANNOT_SAVE_THIS: "message when player not able to get an object",
+  CANNOT_SEE_THIS: "message when player cannot see something",
+  CANNOT_READ_THIS: "message when player is trying to read something not readable",
+  OPEN_MESSAGE: "message something is open",
+  NOT_OPENABLE_MESSAGE: "message when something are not openable",
+  ERROR_USING_OBJECT_WITH: "it doesn't seem to work",
+  HELP_PLAYER_CAN_GO: "You can go to: ",
+  HELP_PLAYER_CAN_SEE: "you can see: ",
+  HELP_PLAYER_CAN_DO: "you could open, get, read and see things too",
+  HELP_PLAYER_INVENTORY: "In your inventory you have:",
+}
