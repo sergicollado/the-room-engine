@@ -10,7 +10,7 @@ const interactiveObjectMapper = ({id,
   lockedMessage,
   unlockMessage,
   errorUsing,
-  useWithActions=[]
+  useWithActions=[],
 }) => {
   return InteractiveObject(id, description, smallDescription, features, {openDescription, openMessage, readableText, lockedMessage, unlockMessage, errorUsing}, useWithActions);
 }

@@ -1,58 +1,70 @@
 const {Feature} = require("./interactiveObjects");
+const {ResponseDefinition} = require("./responseDefinition");
+const {Response} = require("./responseController");
 
-const Player = (currentPlace, inventory, dialogs) => {
+const Player = (currentPlace, inventory, responseController) => {
 
   let place = currentPlace;
 
   return {
     see: (idObject) => {
       if (inventory.contains(idObject)) {
-        return inventory.get(idObject).getDescription() + dialogs.SEE_AN_OBJECT_FROM_INVENTORY;
+        const objectDescription = inventory.get(idObject).getDescription();
+        return { text: objectDescription.text + responseController.getResponse(ResponseDefinition.SEE_AN_OBJECT_FROM_INVENTORY).getText(),
+          image: objectDescription.image };
       }
       const objectSeen = place.getObject(idObject);
       if(!objectSeen) {
-        return dialogs.CANNOT_SEE_THIS;
+        return responseController.getResponse(ResponseDefinition.CANNOT_SEE_THIS);
       }
       return objectSeen.getDescription();
     },
 
     readObject:(idObject) => {
       if (inventory.contains(idObject)) {
-        return inventory.get(idObject).getText() + dialogs.READ_AN_OBJECT_FROM_INVENTORY;
+        const responseInventoryFromSetting = responseController.getResponse(ResponseDefinition.READ_AN_OBJECT_FROM_INVENTORY);
+        return Response({
+          text: inventory.get(idObject).getReadableResponse().text + responseInventoryFromSetting.text,
+          image: responseInventoryFromSetting.image,
+          responseDefinition: ResponseDefinition.READ_AN_OBJECT_FROM_INVENTORY
+        });
       }
 
       const toReadObject = place.getObject(idObject);
       if (toReadObject && toReadObject.is(Feature.READABLE)) {
-        return place.getObject(idObject).getText();
+        return place.getObject(idObject).getReadableResponse();
       }
-      return dialogs.CANNOT_READ_THIS;
+      return responseController.getResponse(ResponseDefinition.CANNOT_READ_THIS);
     },
     getCurrentPlace: () => {
       return place;
     },
+
     goToPlace: (targetPlace) => {
       place = targetPlace;
     },
 
-    getObject: (idObject) => {
+    addToInventory: (idObject) => {
       const toGetObject = place.getObject(idObject);
       if(!toGetObject.is(Feature.PORTABLE)) {
-        return dialogs.CANNOT_SAVE_THIS;
+        return responseController.getResponse(ResponseDefinition.CANNOT_SAVE_THIS);
       }
       inventory.add(toGetObject);
-      return dialogs.GET_OBJECT;
+      return responseController.getResponse(ResponseDefinition.GET_OBJECT);
+    },
+
+    getObject: (idObject) => {
+      const fromInventory = inventory.get(idObject);
+      const fromPlace = place.getObject(idObject);
+      return fromInventory || fromPlace;
     },
 
     open: (idObject) => {
       const toOpen = place.getObject(idObject);
       if(toOpen.isNot(Feature.OPENABLE)) {
-        return dialogs.NOT_OPENABLE_MESSAGE
+        return responseController.getResponse(ResponseDefinition.NOT_OPENABLE_MESSAGE)
       }
       return toOpen.open();
-    },
-
-    has: (idObject) => {
-      return inventory.contains(idObject);
     },
 
     use: (interactiveObject) => {

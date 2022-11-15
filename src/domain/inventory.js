@@ -13,7 +13,7 @@ const Inventory  = (data) => {
   }
 
   const getContentDescription = () => {
-    return data.map(({smallDescription}) => smallDescription).join(", ");
+    return data.map(({smallDescription}) => smallDescription.text).join(", ") ;
   }
   return {
     contains,

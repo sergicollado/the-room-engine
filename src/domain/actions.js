@@ -6,5 +6,9 @@ exports.ActionType = {
   USE: "USE",
   READ: "READ",
   OPEN: "OPEN",
-  SAY: "SAY"
+  SAY: "SAY",
+  START: "START",
+  THE_END: "END",
+  UNHIDE: "UNHIDE"
 }
+

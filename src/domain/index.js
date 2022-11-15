@@ -4,6 +4,7 @@ const {Inventory} = require("./inventory");
 const {TheRoomEngine} = require("./engine");
 const {Feature, InteractiveObjects} = require("./interactiveObjects");
 const {ActionType} = require("./actions");
+const {Scene} = require("./scene");
 
 module.exports = {
   Player,
@@ -12,5 +13,6 @@ module.exports = {
   TheRoomEngine,
   Feature,
   InteractiveObjects,
-  ActionType
+  ActionType,
+  Scene,
 }

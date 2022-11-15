@@ -1,4 +1,6 @@
 const { ActionType } = require("./actions");
+const { ResponseDefinition } = require("./responseDefinition");
+const { Response } = require("./responseController");
 
  const Feature = {
   READABLE: "READABLE",
@@ -14,8 +16,11 @@ const InteractiveObject = (
   description,
   smallDescription,
   features=[],
-  messages={openMessage:"", openDescription:"", readableText:"", lockedMessage:"", unlockMessage:"", errorUsing:""},
-  useWithActions=[]) => {
+  messages,
+  useWithActions=[],
+  ) => {
+  const {openMessage, openDescription, readableText, lockedMessage, unlockMessage, errorUsing} = messages;
+
   const is = (feature) => {
       return features.includes(feature) ;
     };
@@ -24,14 +29,17 @@ const InteractiveObject = (
     };
 
   const getOpenMessage= () => {
-      return messages.openMessage;
+      return openMessage;
     };
   const unlock = () => {
     removeFeature(Feature.LOCKED);
   };
+  const unhide = () => {
+    removeFeature(Feature.HIDDEN);
+  };
 
   const getTryToOpenButLockedMessage= () => {
-    return messages.lockedMessage;
+    return lockedMessage;
   };
   const removeFeature = (featureToRemove) => {
     features= features.filter((feature) => { feature!==featureToRemove});
@@ -43,6 +51,7 @@ const InteractiveObject = (
     smallDescription,
     getOpenMessage,
     unlock,
+    unhide,
     is,
     isNot,
     getTryToOpenButLockedMessage,
@@ -62,13 +71,13 @@ const InteractiveObject = (
 
     getDescription: () => {
       if(is(Feature.OPENABLE) && is(Feature.OPEN)) {
-        return messages.openDescription;
+        return openDescription;
       }
       return description;
     },
 
-    getText: () => {
-      return messages.readableText;
+    getReadableResponse: () => {
+      return readableText;
     },
 
     addFeature: (featureToAdd)  => {
@@ -79,12 +88,16 @@ const InteractiveObject = (
       const {id, action} = useWithActions.find(({id}) => interactiveObject.id===id) || {};
 
       if(!id) {
-        return messages.errorUsing;
+        return;
       }
 
       if(action === ActionType.UNLOCK) {
-        unlock()
-        return messages.unlockMessage
+        unlock();
+        return Response({...unlockMessage, responseDefinition: ResponseDefinition.UNLOCK});
+      }
+
+      if(action === ActionType.PLOT) {
+        return {responseDefinition: ResponseDefinition.PLOT_SUCCESS};
       }
     }
   }

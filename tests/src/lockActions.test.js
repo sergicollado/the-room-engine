@@ -1,97 +1,103 @@
 const { TheRoomEngine, Feature, ActionType } = require("../../src/domain");
-const {dialogs} = require("./dialogs");
+const { ResponseDefinition } = require("../../src/domain/responseDefinition");
+const {responses} = require("./responses");
 
 describe('Actions requirements and locks', () => {
-  let theRoomEngine;
+  let scene;
   let player;
+  let inventory;
+
   beforeEach(() => {
     const firstPlace = {
       id : "firstPlace",
-      description : "first place description",
+      description :{text:"first place description", image: "firstPlaceImage"},
       objects: [
-        {id: "table", description: "first place description"},
-        {id: "door", description: "it's a door", features:[Feature.OPENABLE], openMessage: "the door is opened now you can see more things", openDescription: "From this door we can now watch a shadow"},
+        {id: "table", description: {text:"first place description", image: "tableImage"}},
+        {id: "door", description: {text:"it's a door", image: "doorImage"}, features:[Feature.OPENABLE], openMessage: {text:"the door is opened now you can see more things", image: "openDoorOpen"}, openDescription: {text:"From this door we can now watch a shadow", image: "openDoorDescriptionImage"}},
         {
           id: "doorToUnlock",
-          description: "it's a locked door",
+          description: {text:"it's a locked door", image: "toUnlockImage"},
           features:[Feature.OPENABLE, Feature.LOCKED],
-          lockedMessage:"You need a key to open this door",
-          openMessage: "the door after was locked  and NOW is open",
-          openDescription: "From this door we can now watch a little carrousel",
-          unlockMessage:"the key turns, and the door opens slowly, from there you can see a small carousel.",
-          errorUsing:"it doesn't seem to work",
+          lockedMessage: {text:"You need a key to open this door", image: "toUnlockImage"},
+          openMessage:  {text:"the door after was locked  and NOW is open", image: "toUnlockImage"},
+          openDescription: {text:"From this door we can now watch a little carrousel", image: "toUnlockImage"},
+          unlockMessage: {text:"the key turns, and the door opens slowly, from there you can see a small carousel.", image: "toUnlockImage"},
+          errorUsing: {text:"it doesn't seem to work", image: "toUnlockImage"},
           useWithActions: [{id:"key", action: ActionType.UNLOCK}],
         },
-        {id: "key", description: "a key", features:[Feature.USABLE]}
+        {id: "key", description: {text:"a key", image: "keyImage"}, features:[Feature.USABLE]}
       ]};
 
     const secondPlace ={
         id : "secondPlace",
-        description : "secondPlace description",
+        description : {text:"secondPlace description", image: "secondPlaceImage"},
         objects: [{
           id: "book",
-          description: "book description",
-          readableText: "book text content when is read",
+          description: {text:"book description", image: "bookImage"},
+          readableText: {text:"book text content when is read", image: "bookImage"},
           features:[Feature.READABLE]
         }, {
           id: "knife",
-          description: "knife description",
+          description: {text:"knife description", image: "knifeImage"},
           features:[Feature.PORTABLE]
         }]};
 
     const currentInventory = [];
-    theRoomEngine = TheRoomEngine([firstPlace,secondPlace], dialogs, currentInventory);
-    player = theRoomEngine.getPlayer();
+    scene = TheRoomEngine([firstPlace,secondPlace], responses, currentInventory).scene;
+    player = scene.player;
+    inventory = scene.inventory;
   })
 
   test('the player can open openable things', () => {
-    const expectedObjectDescription = "the door is opened now you can see more things";
+    const expectedObjectDescription = {image: "openDoorOpen", text: "the door is opened now you can see more things"};
     const openDoorMessage = player.open("door");
-    expect(openDoorMessage).toBe(expectedObjectDescription);
+    expect(openDoorMessage).toStrictEqual(expectedObjectDescription);
   })
 
   test('when player try to open not openable things return suitable message', () => {
     const expectedObjectDescription = "message when something are not openable";
     const somethingNotOpenableMessage = player.open("table");
-    expect(somethingNotOpenableMessage).toBe(expectedObjectDescription);
+    expect(somethingNotOpenableMessage.text).toBe(expectedObjectDescription);
+    expect(somethingNotOpenableMessage.responseDefinition).toBe(ResponseDefinition.NOT_OPENABLE_MESSAGE);
   })
 
   test('the player see new descriptions when something is open', () => {
-    const expectedObjectDescription = "From this door we can now watch a shadow";
+    const expectedObjectDescription = {image: "openDoorDescriptionImage", text: "From this door we can now watch a shadow"};
     player.open("door");
     const openDoorMessage = player.see("door");
-    expect(openDoorMessage).toBe(expectedObjectDescription);
+    expect(openDoorMessage).toStrictEqual(expectedObjectDescription);
   })
 
   test('player CANNOT open an openable object when is LOCKED', () => {
-    const expectedLockedMessage = "You need a key to open this door";
+    const expectedLockedMessage = {image: "toUnlockImage", text: "You need a key to open this door"};
     const doorToUnlockMessage = player.open("doorToUnlock");
-    expect(doorToUnlockMessage).toBe(expectedLockedMessage);
+    expect(doorToUnlockMessage).toStrictEqual(expectedLockedMessage);
 
-    const doorToUnlock = theRoomEngine.getCurrentPlace().getObject("doorToUnlock");
+    const doorToUnlock = scene.getCurrentPlace().getObject("doorToUnlock");
     expect(doorToUnlock.is(Feature.LOCKED)).toBe(true);
   })
 
   test('player can use things to open an OPENABLE and LOCKED object', () => {
-    const key = theRoomEngine.getCurrentPlace().getObject("key");
+    const doorToUnlock = scene.getCurrentPlace().getObject("doorToUnlock");
+    const response = player.use("key","doorToUnlock");
 
-    const doorToUnlock = theRoomEngine.getCurrentPlace().getObject("doorToUnlock");
-    const message = player.use(key).with(doorToUnlock);
-
-    const expectMessage = "the key turns, and the door opens slowly, from there you can see a small carousel.";
-    expect(message).toBe(expectMessage);
+    const expectMessage =  {
+      image: "toUnlockImage",
+      responseDefinition: ResponseDefinition.UNLOCK,
+      text: "the key turns, and the door opens slowly, from there you can see a small carousel."
+    };
+    expect({text:response.text, image: response.image, responseDefinition: response.responseDefinition}).toStrictEqual(expectMessage);
     expect(doorToUnlock.isNot(Feature.LOCKED)).toBe(true);
   })
 
   test('LOCKED objects CANNOT be opened with any object', () => {
-    const table = theRoomEngine.getCurrentPlace().getObject("table");
-    const doorToUnlock = theRoomEngine.getCurrentPlace().getObject("doorToUnlock");
+    const doorToUnlock = scene.getCurrentPlace().getObject("doorToUnlock");
 
-    const message = player.use(table).with(doorToUnlock);
+    const response = player.use("table","doorToUnlock");
 
     expect(doorToUnlock.is(Feature.LOCKED)).toBe(true);
 
-    const expectMessage = "it doesn't seem to work";
-    expect(message).toBe(expectMessage);
+    const expectMessage = { image: "errorUsingImage", responseDefinition: "ERROR_USING_OBJECT_WITH", text: "it doesn't seem to work"};
+    expect(response.getPrimitives()).toStrictEqual(expectMessage);
   })
 });

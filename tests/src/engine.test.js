@@ -1,39 +1,39 @@
 const { TheRoomEngine, Feature, ActionType } = require("../../src/domain");
-const {dialogs} = require("./dialogs");
+const {responses} = require("./responses");
 
 const firstPlace = {
   id : "firstPlace",
   description : "first place description",
-  smallDescription: "the First place",
+  smallDescription: {text:"the First place",image:""},
   objects: [
-    {id: "table", description: "first place description", smallDescription: "a table",},
-    {id: "note", description: "a readable an portable note", smallDescription: "a paper note", readableText: "this is a note Text",  features:[Feature.READABLE, Feature.PORTABLE]},
-    {id: "door", description: "it's a door", smallDescription: "a little door",features:[Feature.OPENABLE], openMessage: "the door is opened now you can see more things", openDescription: "From this door we can now watch a shadow"},
+    {id: "table", description: {text:"first place description", image:""}, smallDescription: {text:"a table",image:""}},
+    {id: "note", description: {text:"a readable an portable note",image:""}, smallDescription: {text:"a paper note",image:""}, readableText: {text:"this is a note Text",image:""},  features:[Feature.READABLE, Feature.PORTABLE]},
+    {id: "door", description: {text:"it's a door",image:""}, smallDescription: {text:"a little door",image:""},features:[Feature.OPENABLE], openMessage: {text:"the door is opened now you can see more things",image:""}, openDescription: {text:"From this door we can now watch a shadow",image:""}},
     {
       id: "doorToUnlock",
-      description: "it's a locked door",
-      smallDescription: "a locked door",
+      description: {text:"it's a locked door",image:""},
+      smallDescription: {text:"a locked door",image:""},
       features:[Feature.OPENABLE, Feature.LOCKED],
-      lockedMessage:"You need a key to open this door",
-      openMessage: "the door after was locked  and NOW is open",
-      openDescription: "From this door we can now watch a little carrousel",
+      lockedMessage: {text:"You need a key to open this door",image:""},
+      openMessage: {text:"the door after was locked  and NOW is open",image:""},
+      openDescription: {text:"From this door we can now watch a little carrousel",image:""},
       useWithActions: [{id:"key", action: ActionType.UNLOCK}]
     },
-    {id: "key", smallDescription: "a key", description: "a key", features:[Feature.USABLE, Feature.HIDDEN]}
+    {id: "key", smallDescription: {text:"a key",image:""}, description: {text:"a key",image:""}, features:[Feature.USABLE, Feature.HIDDEN]}
   ]};
 
 const secondPlace = {
     id : "secondPlace",
-    description : "secondPlace description",
-    smallDescription: "the Second Place",
+    description : {text:"secondPlace description",image:""},
+    smallDescription: {text:"the Second Place",image:""},
     objects: [{
       id: "book",
-      description: "book description",
-      readableText: "book text content when is read",
+      description: {text:"book description",image:""},
+      readableText: {text:"book text content when is read",image:""},
       features:[Feature.READABLE]
     }, {
       id: "knife",
-      description: "knife description",
+      description: {text:"knife description",image:""},
       features:[Feature.PORTABLE]
     }]};
 
@@ -45,138 +45,140 @@ const places = [
 describe('Help', () => {
   const placeOne = {
     id: 'placeOne',
-    description: 'placeOne description',
-    smallDescription: 'placeOne small description',
+    description: {text:'placeOne description',image:""},
+    smallDescription: {text:'placeOne small description',image:""},
     objects: [
-      {id: "table", description: "table description", smallDescription: "a table",},
-      {id: "door", description: "door description", smallDescription: "a door",},
+      {id: "table", description: {text:"table description",image:""}, smallDescription: {text:"a table",image:""}},
+      {id: "door", description: {text:"door description",image:""}, smallDescription: {text:"a door",image:""}},
     ]
   };
   const placeTwo = {
     id: 'placeTwo',
     description: 'placeTwo description',
-    smallDescription: 'placeTwo small description',
+    smallDescription: {text:'placeTwo small description',image:""},
     objects: [
-      {id: "book", description: "book description", smallDescription: "a book",},
-      {id: "key", description: "key description", smallDescription: "a key",},
+      {id: "book", description: {text:"book description",image:""}, smallDescription: {text:"a book",image:""}},
+      {id: "key", description: {text:"key description",image:""}, smallDescription: {text:"a key",image:""}},
     ]
   };
   const places = [placeOne, placeTwo];
 
   const currentInventory = [
-    {id: "knife", description: "knife description", smallDescription: "a knife",features:[Feature.PORTABLE]},
-    {id: "ring", description: "ring description", smallDescription: "a ring", features:[Feature.PORTABLE]},
+    {id: "knife", description: {text:"knife description",image:""}, smallDescription: {text:"a knife",image:""},features:[Feature.PORTABLE]},
+    {id: "ring", description: {text:"ring description",image:""}, smallDescription: {text:"a ring",image:""}, features:[Feature.PORTABLE]},
   ]
 
-  let theRoomEngine;
+  let scene;
   beforeEach(() => {
-    theRoomEngine = TheRoomEngine(places, dialogs, currentInventory);
+    scene = TheRoomEngine(places, responses, currentInventory).scene;
   })
 
   test('Engine should response with current place info, to help player', ()=> {
-    const placesToGoMessage = `${dialogs.HELP_PLAYER_CAN_GO} ${placeOne.smallDescription}, ${placeTwo.smallDescription}`;
-    const thingsToSee = `${dialogs.HELP_PLAYER_CAN_SEE} a table, a door`;
-    const inYourInventory = `${dialogs.HELP_PLAYER_INVENTORY} a knife, a ring`;
+    const placesToGoMessage = `${responses.HELP_PLAYER_CAN_GO.text} ${placeOne.smallDescription.text}, ${placeTwo.smallDescription.text}`;
+    const thingsToSee = `${responses.HELP_PLAYER_CAN_SEE.text} a table, a door`;
+    const inYourInventory = `${responses.HELP_PLAYER_INVENTORY.text} a knife, a ring`;
 
-    const helpMessage = theRoomEngine.help();
+    const helpMessage = scene.help().text;
 
-    const expectedHelpMessage = `${placesToGoMessage}, ${thingsToSee}.${dialogs.HELP_PLAYER_CAN_DO}. ${inYourInventory}`;
+    const expectedHelpMessage = `${placesToGoMessage}, ${thingsToSee}.${responses.HELP_PLAYER_CAN_DO.text}. ${inYourInventory}`;
     expect(helpMessage).toBe(expectedHelpMessage);
   })
 
   test('Engine should response info about the player has in her inventory', ()=> {
-    const expectedHelpMessage = `${dialogs.HELP_PLAYER_INVENTORY} a knife, a ring`;
+    const expectedHelpMessage = `${responses.HELP_PLAYER_INVENTORY.text} a knife, a ring`;
 
-    const helpMessage = theRoomEngine.inventoryHelp();
+    const helpMessage = scene.inventoryHelp().text;
     expect(helpMessage).toBe(expectedHelpMessage);
   });
 });
 
 describe('Actions in a place', () => {
-  let theRoomEngine;
+  let scene;
   let player;
+  let inventory;
   beforeEach(() => {
-    theRoomEngine = TheRoomEngine(places, dialogs, []);
-    player = theRoomEngine.getPlayer();
+    scene = TheRoomEngine(places, responses, []).scene;
+    player = scene.player;
+    inventory = scene.inventory;
   })
   test('the player can see an object', () => {
     const expectedObjectDescription = "first place description";
-    const objectSeen = player.see("table");
+    const objectSeen = player.see("table").text;
     expect(objectSeen).toBe(expectedObjectDescription);
   })
 
   test('the player CANNOT see an object', () => {
-    const expectedCannotSeeMessage = dialogs.CANNOT_SEE_THIS;
-    const objectSeen = player.see("unknownObject");
+    const expectedCannotSeeMessage = responses.CANNOT_SEE_THIS.text;
+    const objectSeen = player.see("unknownObject").text;
     expect(objectSeen).toBe(expectedCannotSeeMessage);
   })
 
   test('the player can move to another place', () => {
     const expectedPosition = "secondPlace";
-    theRoomEngine.moveTo(expectedPosition);
-    expect(theRoomEngine.getCurrentPlace().id).toBe(expectedPosition);
+    player.moveTo(expectedPosition);
+    expect(scene.getCurrentPlace().id).toBe(expectedPosition);
   })
 
   test('the engine return a message when player CANNOT move', () => {
     const anUnknownPlace = "any unknown place";
 
-    const message = theRoomEngine.moveTo(anUnknownPlace);
+    const message = player.moveTo(anUnknownPlace).getText();
 
     const expectedPosition = initialPlace;
-    expect(theRoomEngine.getCurrentPlace().id).toBe(expectedPosition.id);
-    const expectedMessage = dialogs.UNKNOWN_PLACE_TO_GO;
+    expect(scene.getCurrentPlace().id).toBe(expectedPosition.id);
+    const expectedMessage = responses.UNKNOWN_PLACE_TO_GO.text;
     expect(message).toBe(expectedMessage)
   })
 
   test('the player can read a readable object', () => {
     const expectedObjectText = "book text content when is read";
-    theRoomEngine.moveTo("secondPlace");
-    const objectText = player.readObject("book");
+    player.moveTo("secondPlace");
+    const objectText = player.read("book").text;
     expect(objectText).toBe(expectedObjectText);
   })
 
   test('the player CANNOT read a not readable object', () => {
-    const expectedObjectText = dialogs.CANNOT_READ_THIS;
-    theRoomEngine.moveTo("secondPlace");
-    const objectText = player.readObject("knife");
+    const expectedObjectText = responses.CANNOT_READ_THIS.text;
+    player.moveTo("secondPlace");
+    const objectText = player.read("knife").text;
     expect(objectText).toBe(expectedObjectText);
   })
 
   test('the player can save to inventory a portable object', () => {
-    theRoomEngine.moveTo("secondPlace");
+    player.moveTo("secondPlace");
 
-    const expectedGetTheObjectMessage = dialogs.GET_OBJECT;
-    const getObjectMessage = player.getObject("knife");
-    expect(getObjectMessage).toBe(expectedGetTheObjectMessage);
-    expect(player.has("knife")).toBe(true);
+    const expectedGetTheObjectMessage = responses.GET_OBJECT.text;
+    const addToInventoryMessage = inventory.add("knife").text;
+    expect(addToInventoryMessage).toBe(expectedGetTheObjectMessage);
+    expect(inventory.has("knife")).toBe(true);
   })
 
   test('the player return a non portable message if it try to get a noPortable object', () => {
-    theRoomEngine.moveTo("secondPlace");
+    player.moveTo("secondPlace");
 
-    const expectedGetTheObjectMessage = dialogs.CANNOT_SAVE_THIS;
-    const getObjectMessage = player.getObject("book");
-    expect(getObjectMessage).toBe(expectedGetTheObjectMessage);
-    expect(player.has("book")).toBe(false);
+    const expectedGetTheObjectMessage = responses.CANNOT_SAVE_THIS.text;
+    const addToInventoryMessage = inventory.add("book").text;
+    expect(addToInventoryMessage).toBe(expectedGetTheObjectMessage);
+    expect(inventory.has("book")).toBe(false);
   })
 
   test('the player can see a previously saved object even in other place', () => {
-    theRoomEngine.moveTo("secondPlace");
-    player.getObject("knife");
-    theRoomEngine.moveTo("firstPlace");
+    player.moveTo("secondPlace");
+    inventory.add("knife");
+    player.moveTo("firstPlace");
 
-    const expectedObjectDescription = "knife description"+dialogs.SEE_AN_OBJECT_FROM_INVENTORY;
-    const objectSeen = player.see("knife");
+    const expectedObjectDescription = "knife description"+responses.SEE_AN_OBJECT_FROM_INVENTORY.text;
+    const objectSeen = player.see("knife").text;
     expect(objectSeen).toBe(expectedObjectDescription);
   })
 
   test('the player can read a previously saved object even in other place if is readable', () => {
     const expectedObjectText = "this is a note Text";
-    player.getObject("note");
-    theRoomEngine.moveTo("secondPlace");
+    inventory.add("note");
+    player.moveTo("secondPlace");
 
-    const expectedObjectTextFromInventory = expectedObjectText+dialogs.READ_AN_OBJECT_FROM_INVENTORY;
-    const text = player.readObject("note");
+    const expectedObjectTextFromInventory = expectedObjectText+responses.READ_AN_OBJECT_FROM_INVENTORY.text;
+    const text = player.read("note").text;
     expect(text).toBe(expectedObjectTextFromInventory);
   })
 });
