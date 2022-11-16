@@ -19,8 +19,8 @@ exports.StoryPlots = (plotsConfig) => {
   const runPlot = ({action, targetId, place}) => {
     const { response, trigger } = getPlot(action, targetId) || {};
     if(trigger) {
-      const targetTrigger = place.getObject(trigger.target);
       if (trigger.type === ActionType.UNHIDE) {
+        const targetTrigger = place.getHiddenObject(trigger.target);
         targetTrigger.unhide();
       }
     }

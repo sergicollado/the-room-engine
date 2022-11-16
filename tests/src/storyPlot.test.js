@@ -1,4 +1,5 @@
 const { TheRoomEngine, ActionType, Feature } = require("../../src/domain");
+const { ResponseDefinition } = require("../../src/domain/responseDefinition");
 const {dialogs} = require("./responses");
 
 describe('Story Plots', () => {
@@ -71,15 +72,15 @@ describe('Story Plots', () => {
   })
 
   test('the engine should return an story plot after open action', () => {
-    const expectedActionMovePlotResponse = {image: "actionOpenImage", text: "a custom plot after an OPEN action"};
+    const expectedActionMovePlotResponse = {image: "actionOpenImage", text: "a custom plot after an OPEN action", responseDefinition: ResponseDefinition.PLOT_SUCCESS};
     const message = player.open("door");
     expect(message).toStrictEqual(expectedActionMovePlotResponse);
   })
 
   test('the engine should NOT return the storyPlot because has not an associated storyPlot', () => {
-    const expectedActionOpenPlotResponse = {image: "doorWithoutOpenPlotOpenMessageImage", text: "the door is opened now you can see more things"};
+    const expectedActionOpenPlotResponse = {image: "doorWithoutOpenPlotOpenMessageImage", text: "the door is opened now you can see more things", responseDefinition: ResponseDefinition.OPEN_MESSAGE};
     const message = player.open("doorWithoutOpenPlot");
-    expect(message).toStrictEqual(expectedActionOpenPlotResponse);
+    expect(message.getPrimitives()).toStrictEqual(expectedActionOpenPlotResponse);
   })
 
   test('the engine should return an story plot after use an object with other one', () => {

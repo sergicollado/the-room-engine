@@ -58,11 +58,11 @@ const InteractiveObject = (
     removeFeature,
     open: () => {
       if(is(Feature.LOCKED)) {
-        return getTryToOpenButLockedMessage();
+        return Response({...getTryToOpenButLockedMessage(), responseDefinition: ResponseDefinition.IS_LOCKED});
       }
 
       features.push(Feature.OPEN);
-      return getOpenMessage();
+      return Response({...getOpenMessage(), responseDefinition: ResponseDefinition.OPEN_MESSAGE});
     },
 
     getMessages: () => {
@@ -71,9 +71,9 @@ const InteractiveObject = (
 
     getDescription: () => {
       if(is(Feature.OPENABLE) && is(Feature.OPEN)) {
-        return openDescription;
+        return Response({...openDescription,responseDefinition: ResponseDefinition.SEE_AND_OBJECT});
       }
-      return description;
+      return Response({...description,responseDefinition: ResponseDefinition.SEE_AND_OBJECT});
     },
 
     getReadableResponse: () => {

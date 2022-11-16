@@ -49,9 +49,9 @@ describe('Actions requirements and locks', () => {
   })
 
   test('the player can open openable things', () => {
-    const expectedObjectDescription = {image: "openDoorOpen", text: "the door is opened now you can see more things"};
+    const expectedObjectDescription = {image: "openDoorOpen", text: "the door is opened now you can see more things", responseDefinition: ResponseDefinition.OPEN_MESSAGE};
     const openDoorMessage = player.open("door");
-    expect(openDoorMessage).toStrictEqual(expectedObjectDescription);
+    expect(openDoorMessage.getPrimitives()).toStrictEqual(expectedObjectDescription);
   })
 
   test('when player try to open not openable things return suitable message', () => {
@@ -62,16 +62,16 @@ describe('Actions requirements and locks', () => {
   })
 
   test('the player see new descriptions when something is open', () => {
-    const expectedObjectDescription = {image: "openDoorDescriptionImage", text: "From this door we can now watch a shadow"};
+    const expectedObjectDescription = {image: "openDoorDescriptionImage", text: "From this door we can now watch a shadow", responseDefinition: ResponseDefinition.SEE_AND_OBJECT};
     player.open("door");
     const openDoorMessage = player.see("door");
-    expect(openDoorMessage).toStrictEqual(expectedObjectDescription);
+    expect(openDoorMessage.getPrimitives()).toStrictEqual(expectedObjectDescription);
   })
 
   test('player CANNOT open an openable object when is LOCKED', () => {
-    const expectedLockedMessage = {image: "toUnlockImage", text: "You need a key to open this door"};
+    const expectedLockedMessage = {image: "toUnlockImage", text: "You need a key to open this door", responseDefinition:ResponseDefinition.IS_LOCKED};
     const doorToUnlockMessage = player.open("doorToUnlock");
-    expect(doorToUnlockMessage).toStrictEqual(expectedLockedMessage);
+    expect(doorToUnlockMessage.getPrimitives()).toStrictEqual(expectedLockedMessage);
 
     const doorToUnlock = scene.getCurrentPlace().getObject("doorToUnlock");
     expect(doorToUnlock.is(Feature.LOCKED)).toBe(true);

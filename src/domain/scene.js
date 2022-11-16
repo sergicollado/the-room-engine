@@ -36,10 +36,12 @@ const Scene = (places, responseController, inventory, plotsController) => {
   const open = (idObject) => {
     const message = player.open(idObject);
     const place = player.getCurrentPlace();
-    const toOpen = place.getObject(idObject);
     let plotMessage;
-    if (toOpen.is(Feature.OPENABLE) && toOpen.is(Feature.OPEN)) {
-      plotMessage = plotsController.runPlot({action: ActionType.OPEN, targetId: idObject, place});
+    if (message.ResponseDefinition !== ResponseDefinition.OPEN_MESSAGE) {
+      const {text , image} = plotsController.runPlot({action: ActionType.OPEN, targetId: idObject, place}) || {};
+      if (text) {
+        plotMessage = {text,image, responseDefinition: ResponseDefinition.PLOT_SUCCESS}
+      }
     }
     return plotMessage || message;
 
