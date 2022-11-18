@@ -2,7 +2,7 @@ const {interactiveObjectMapper} = require("../shared/interactiveObjectsMapper");
 const { Feature } = require("./interactiveObjects");
 
 const Place = ({id, description, smallDescription, objects=[]}) => {
-  const interactiveObjects = objects.map(interactiveObjectMapper);
+  let interactiveObjects = objects.map(interactiveObjectMapper);
 
   const getObject = (idObject) =>  {
     return interactiveObjects.find(({id , isNot}) => (id===idObject && isNot(Feature.HIDDEN)));
@@ -15,6 +15,16 @@ const Place = ({id, description, smallDescription, objects=[]}) => {
     return objects.map(({smallDescription}) => `${smallDescription.text}`).join(", ");
   }
 
+  const removeObject = (idObject) => {
+    interactiveObjects = interactiveObjects.filter(({id}) => {
+      return id!==idObject
+    })
+  }
+  const getPrimitives = () => {
+    const primitiveObjects = interactiveObjects.map(obj => obj.getPrimitives());
+    return {id, description, smallDescription, objects:primitiveObjects};
+  }
+
   return {
     id,
     description,
@@ -22,6 +32,8 @@ const Place = ({id, description, smallDescription, objects=[]}) => {
     getObject,
     getHiddenObject,
     getObjectsDescription,
+    removeObject,
+    getPrimitives
   }
 }
 

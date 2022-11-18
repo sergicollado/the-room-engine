@@ -1,4 +1,4 @@
-const dialogs = require('./dialogs').dialogs;
+const dialogs = require('./responses').dialogs;
 const {Player, Place, TheRoomEngine} = require("../src/domain");
 
 exports.init = () => {

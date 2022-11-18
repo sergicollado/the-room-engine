@@ -13,4 +13,6 @@ exports.responses = {
   HELP_PLAYER_CAN_SEE: {text:"you can see: ",image:"helpSeeImage"},
   HELP_PLAYER_CAN_DO: {text:"you could open, get, read and see things too",image:"helpDoImage"},
   HELP_PLAYER_INVENTORY: {text:"In your inventory you have:",image:"helpInventoryImage"},
+  OR_CONJUNCTION: {text: "or"},
+  AND_CONJUNCTION: {text: "and"},
 }

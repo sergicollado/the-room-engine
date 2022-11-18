@@ -21,6 +21,15 @@ const InteractiveObject = (
   ) => {
   const {openMessage, openDescription, readableText, lockedMessage, unlockMessage, errorUsing} = messages;
 
+  const getPrimitives = () => {
+    return {  id,
+      description,
+      smallDescription,
+      features,
+      messages,
+      useWithActions};
+  };
+
   const is = (feature) => {
       return features.includes(feature) ;
     };
@@ -56,6 +65,7 @@ const InteractiveObject = (
     isNot,
     getTryToOpenButLockedMessage,
     removeFeature,
+    getPrimitives,
     open: () => {
       if(is(Feature.LOCKED)) {
         return Response({...getTryToOpenButLockedMessage(), responseDefinition: ResponseDefinition.IS_LOCKED});

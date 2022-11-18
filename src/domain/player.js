@@ -9,6 +9,9 @@ const Player = (currentPlace, inventory, responseController) => {
   return {
     see: (idObject) => {
       if (inventory.contains(idObject)) {
+        if (!idObject) {
+          return currentPlace.getDescription();
+        }
         const objectDescription = inventory.get(idObject).getDescription();
         return { text: objectDescription.text + responseController.getResponse(ResponseDefinition.SEE_AN_OBJECT_FROM_INVENTORY).getText(),
           image: objectDescription.image };

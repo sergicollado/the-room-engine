@@ -15,11 +15,14 @@ const Inventory  = (data) => {
   const getContentDescription = () => {
     return data.map(({smallDescription}) => smallDescription.text).join(", ") ;
   }
+  const getPrimitives = () => ( data.map((element) => element.getPrimitives()));
+
   return {
     contains,
     add,
     get,
-    getContentDescription
+    getContentDescription,
+    getPrimitives
   }
 };
 

@@ -1,4 +1,4 @@
-exports.dialogs = {
+exports.responses = {
   INIT: "these are my firsts steps",
   SEE_A_OBJECT_FROM_INVENTORY: "... me parecía útil y me lo guardé",
   GET_OBJECT: "me la guardaré, puede ser útil más adelante",

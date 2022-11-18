@@ -1,6 +1,5 @@
 
 const { Player } = require("./player");
-const { Feature } = require("./interactiveObjects");
 const {ResponseDefinition} = require("./responseDefinition");
 const {Response} = require("./responseController");
 const { ActionType } = require("./actions");
@@ -89,6 +88,9 @@ const Scene = (places, responseController, inventory, plotsController) => {
   const inventoryHelp = () => {
     const text = inventory.getContentDescription();
     const image = responseController.getResponse(ResponseDefinition.HELP_PLAYER_INVENTORY).image;
+    if(!text) {
+      return Response({text, image}, ResponseDefinition.HELP_PLAYER_INVENTORY );
+    }
     const inYourInventory = `${responseController.getResponse(ResponseDefinition.HELP_PLAYER_INVENTORY).getText()} ${text}`;
     return Response({text: inYourInventory, image}, ResponseDefinition.HELP_PLAYER_INVENTORY );
   }
