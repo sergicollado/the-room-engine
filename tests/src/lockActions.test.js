@@ -1,11 +1,10 @@
 const { TheRoomEngine, Feature, ActionType } = require("../../src/domain");
 const { ResponseDefinition } = require("../../src/domain/responseDefinition");
-const {responses} = require("./responses");
+const {responses:configResponses} = require("./responses");
 
 describe('Actions requirements and locks', () => {
   let scene;
   let player;
-  let inventory;
 
   beforeEach(() => {
     const firstPlace = {
@@ -42,8 +41,7 @@ describe('Actions requirements and locks', () => {
           features:[Feature.PORTABLE]
         }]};
 
-    const currentInventory = [];
-    scene = TheRoomEngine([firstPlace,secondPlace], responses, currentInventory).scene;
+    scene = TheRoomEngine({configPlaces:{placeList:[firstPlace,secondPlace]}, configResponses}).scene;
     player = scene.player;
     inventory = scene.inventory;
   })

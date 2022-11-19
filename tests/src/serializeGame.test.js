@@ -7,7 +7,7 @@ describe('Inventory', () => {
       {id: "ring", description: {text:"ring description",image:""}, smallDescription: {text:"a ring",image:""}, features:[Feature.PORTABLE]},
     ];
     const { description, smallDescription} = ["a description", "anSmallDescription"];
-    const engine = TheRoomEngine([{id:"aPlace",description, smallDescription}], {}, inventoryConfig, []);
+    const engine = TheRoomEngine({configPlaces:{placeList:[{id:"aPlace",description, smallDescription}]}, configResponses:{}, inventoryConfig});
     const {inventory: inventoryPrimitives} = engine.getPrimitives();
 
     const messages  ={
@@ -62,7 +62,7 @@ describe('Primitives from Places', () => {
           features:[Feature.PORTABLE]
         }]}
 
-    const engine = TheRoomEngine([firstPlace,secondPlace], {}, [], []);
+    const engine = TheRoomEngine({configPlaces:{placeList:[firstPlace,secondPlace]}, configResponses:{}});
     const {places: placesPrimitives} = engine.getPrimitives();
 
 
@@ -81,11 +81,11 @@ describe('Primitives from Places', () => {
 describe('Player current place', () => {
   it('should return the player current place ID', () => {
     const { description, smallDescription} = ["a description", "anSmallDescription"];
-    const places = [
+    const placeList = [
       {id:"aPlace",description, smallDescription}, {id:"anotherPlace",description, smallDescription}
     ];
 
-    const {scene, getPrimitives} = TheRoomEngine(places, {}, [], []);
+    const {scene, getPrimitives} = TheRoomEngine({configPlaces:{placeList}, configResponses:{}});
     const {player} = scene;
     player.moveTo("anotherPlace");
 

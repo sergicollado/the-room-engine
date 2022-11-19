@@ -1,6 +1,6 @@
 const { TheRoomEngine, ActionType, Feature } = require("../../src/domain");
 const { ResponseDefinition } = require("../../src/domain/responseDefinition");
-const {dialogs} = require("./responses");
+const {dialogs:configResponses} = require("./responses");
 
 describe('Story Plots', () => {
   let scene;
@@ -46,7 +46,7 @@ describe('Story Plots', () => {
       description :{text: "thirdPlace description", image:"thirdPlaceImage"},
       };
 
-    const currentInventory = [];
+    const inventoryConfig = [];
     const storyPlots = [
       { action: { type: ActionType.START},response: {text: "This is the intro of my story... Once upon a time", image:"actionStartImage"}},
       { action: { type: ActionType.MOVE, target: "secondPlace"},response: {text: "a custom plot after MOVE action", image:"actionMoveImage"}},
@@ -55,7 +55,7 @@ describe('Story Plots', () => {
       { action: { type: ActionType.THE_END},response: {text: "This is THE END", image:"actionENDImage"}},
     ]
 
-    scene = TheRoomEngine([firstPlace,secondPlace, thirdPlace], dialogs, currentInventory, storyPlots).scene;
+    scene = TheRoomEngine({configPlaces:{placeList:[firstPlace,secondPlace, thirdPlace]}, configResponses, inventoryConfig, storyPlots}).scene;
     player = scene.player;
   })
 

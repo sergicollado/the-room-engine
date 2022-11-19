@@ -1,5 +1,5 @@
 const { TheRoomEngine, Feature, ActionType } = require("../../src/domain");
-const {responses} = require("./responses");
+const {responses:configResponses} = require("./responses");
 
 const firstPlace = {
   id : "firstPlace",
@@ -37,9 +37,9 @@ const secondPlace = {
       features:[Feature.PORTABLE]
     }]};
 
-const initialPlace = firstPlace;
+const initialPlace = "firstPlace";
 
-const places = [
+const placeList = [
   firstPlace, secondPlace
 ]
 describe('Help', () => {
@@ -61,31 +61,31 @@ describe('Help', () => {
       {id: "key", description: {text:"key description",image:""}, smallDescription: {text:"a key",image:""}},
     ]
   };
-  const places = [placeOne, placeTwo];
+  const placeList = [placeOne, placeTwo];
 
-  const currentInventory = [
+  const inventoryConfig = [
     {id: "knife", description: {text:"knife description",image:""}, smallDescription: {text:"a knife",image:""},features:[Feature.PORTABLE]},
     {id: "ring", description: {text:"ring description",image:""}, smallDescription: {text:"a ring",image:""}, features:[Feature.PORTABLE]},
   ]
 
   let scene;
   beforeEach(() => {
-    scene = TheRoomEngine(places, responses, currentInventory).scene;
+    scene = TheRoomEngine({configPlaces:{placeList}, configResponses, inventoryConfig}).scene;
   })
 
   test('Engine should response with current place info, to help player', ()=> {
-    const placesToGoMessage = `${responses.HELP_PLAYER_CAN_GO.text} ${placeOne.smallDescription.text}, ${placeTwo.smallDescription.text}`;
-    const thingsToSee = `${responses.HELP_PLAYER_CAN_SEE.text} a table, a door`;
-    const inYourInventory = `${responses.HELP_PLAYER_INVENTORY.text} a knife, a ring`;
+    const placesToGoMessage = `${configResponses.HELP_PLAYER_CAN_GO.text} ${placeOne.smallDescription.text}, ${placeTwo.smallDescription.text}`;
+    const thingsToSee = `${configResponses.HELP_PLAYER_CAN_SEE.text} a table, a door`;
+    const inYourInventory = `${configResponses.HELP_PLAYER_INVENTORY.text} a knife, a ring`;
 
     const helpMessage = scene.help().text;
 
-    const expectedHelpMessage = `${placesToGoMessage}, ${thingsToSee}.${responses.HELP_PLAYER_CAN_DO.text}. ${inYourInventory}`;
+    const expectedHelpMessage = `${placesToGoMessage}, ${thingsToSee}.${configResponses.HELP_PLAYER_CAN_DO.text}. ${inYourInventory}`;
     expect(helpMessage).toBe(expectedHelpMessage);
   })
 
-  test('Engine should response info about the player has in her inventory', ()=> {
-    const expectedHelpMessage = `${responses.HELP_PLAYER_INVENTORY.text} a knife, a ring`;
+  test('Engine should response info about what player has in inventory', ()=> {
+    const expectedHelpMessage = `${configResponses.HELP_PLAYER_INVENTORY.text} a knife, a ring`;
 
     const helpMessage = scene.inventoryHelp().text;
     expect(helpMessage).toBe(expectedHelpMessage);
@@ -97,7 +97,7 @@ describe('Actions in a place', () => {
   let player;
   let inventory;
   beforeEach(() => {
-    scene = TheRoomEngine(places, responses, []).scene;
+    scene = TheRoomEngine({configPlaces:{placeList}, configResponses}).scene;
     player = scene.player;
     inventory = scene.inventory;
   })
@@ -108,7 +108,7 @@ describe('Actions in a place', () => {
   })
 
   test('the player CANNOT see an object', () => {
-    const expectedCannotSeeMessage = responses.CANNOT_SEE_THIS.text;
+    const expectedCannotSeeMessage = configResponses.CANNOT_SEE_THIS.text;
     const objectSeen = player.see("unknownObject").text;
     expect(objectSeen).toBe(expectedCannotSeeMessage);
   })
@@ -125,8 +125,8 @@ describe('Actions in a place', () => {
     const message = player.moveTo(anUnknownPlace).getText();
 
     const expectedPosition = initialPlace;
-    expect(scene.getCurrentPlace().id).toBe(expectedPosition.id);
-    const expectedMessage = responses.UNKNOWN_PLACE_TO_GO.text;
+    expect(scene.getCurrentPlace().id).toBe(expectedPosition);
+    const expectedMessage = configResponses.UNKNOWN_PLACE_TO_GO.text;
     expect(message).toBe(expectedMessage)
   })
 
@@ -138,7 +138,7 @@ describe('Actions in a place', () => {
   })
 
   test('the player CANNOT read a not readable object', () => {
-    const expectedObjectText = responses.CANNOT_READ_THIS.text;
+    const expectedObjectText = configResponses.CANNOT_READ_THIS.text;
     player.moveTo("secondPlace");
     const objectText = player.read("knife").text;
     expect(objectText).toBe(expectedObjectText);
@@ -147,7 +147,7 @@ describe('Actions in a place', () => {
   test('the player can save to inventory a portable object', () => {
     player.moveTo("secondPlace");
 
-    const expectedGetTheObjectMessage = responses.GET_OBJECT.text;
+    const expectedGetTheObjectMessage = configResponses.GET_OBJECT.text;
     const addToInventoryMessage = inventory.add("knife").text;
     expect(addToInventoryMessage).toBe(expectedGetTheObjectMessage);
     expect(inventory.has("knife")).toBe(true);
@@ -156,7 +156,7 @@ describe('Actions in a place', () => {
   test('the player return a non portable message if it try to get a noPortable object', () => {
     player.moveTo("secondPlace");
 
-    const expectedGetTheObjectMessage = responses.CANNOT_SAVE_THIS.text;
+    const expectedGetTheObjectMessage = configResponses.CANNOT_SAVE_THIS.text;
     const addToInventoryMessage = inventory.add("book").text;
     expect(addToInventoryMessage).toBe(expectedGetTheObjectMessage);
     expect(inventory.has("book")).toBe(false);
@@ -167,7 +167,7 @@ describe('Actions in a place', () => {
     inventory.add("knife");
     player.moveTo("firstPlace");
 
-    const expectedObjectDescription = "knife description"+responses.SEE_AN_OBJECT_FROM_INVENTORY.text;
+    const expectedObjectDescription = "knife description"+configResponses.SEE_AN_OBJECT_FROM_INVENTORY.text;
     const objectSeen = player.see("knife").text;
     expect(objectSeen).toBe(expectedObjectDescription);
   })
@@ -177,7 +177,7 @@ describe('Actions in a place', () => {
     inventory.add("note");
     player.moveTo("secondPlace");
 
-    const expectedObjectTextFromInventory = expectedObjectText+responses.READ_AN_OBJECT_FROM_INVENTORY.text;
+    const expectedObjectTextFromInventory = expectedObjectText+configResponses.READ_AN_OBJECT_FROM_INVENTORY.text;
     const text = player.read("note").text;
     expect(text).toBe(expectedObjectTextFromInventory);
   })

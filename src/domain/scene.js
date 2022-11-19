@@ -1,11 +1,8 @@
-
-const { Player } = require("./player");
 const {ResponseDefinition} = require("./responseDefinition");
 const {Response} = require("./responseController");
 const { ActionType } = require("./actions");
 
-const Scene = (places, responseController, inventory, plotsController) => {
-  const player = Player(places[0], inventory, responseController);
+const Scene = ({places, responseController, inventory, plotsController, player}) => {
 
   const getInitialPlot = () => {
     return  plotsController.getInitialPlot().response;

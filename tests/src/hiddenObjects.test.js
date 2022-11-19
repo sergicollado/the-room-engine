@@ -1,6 +1,6 @@
 const { TheRoomEngine, Feature, ActionType } = require("../../src/domain");
 const { ResponseDefinition } = require("../../src/domain/responseDefinition");
-const {responses} = require("./responses");
+const {responses: configResponses} = require("./responses");
 
 describe('Hidden Objects behaviour', () => {
   let scene;
@@ -35,8 +35,8 @@ describe('Hidden Objects behaviour', () => {
     const storyPlots = [
       { action: { type: ActionType.OPEN, target: "drawer"}, trigger: { type: ActionType.UNHIDE, target: "coin"},response: {text: "opening this drawer a COIN is showed", image:"drawerImage"}},
     ]
-    const currentInventory = [];
-    scene = TheRoomEngine([firstPlace,secondPlace], responses, currentInventory, storyPlots).scene;
+
+    scene = TheRoomEngine({configPlaces:{placeList:[firstPlace,secondPlace]}, configResponses, storyPlots}).scene;
     player = scene.player;
     inventory = scene.inventory;
   })
