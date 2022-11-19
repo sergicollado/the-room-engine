@@ -74,13 +74,13 @@ describe('Help', () => {
   })
 
   test('Engine should response with current place info, to help player', ()=> {
-    const placesToGoMessage = `${configResponses.HELP_PLAYER_CAN_GO.text} ${placeOne.smallDescription.text}, ${placeTwo.smallDescription.text}`;
+    const placesToGoMessage = `${configResponses.HELP_PLAYER_CAN_GO.text} ${placeOne.smallDescription.text} or ${placeTwo.smallDescription.text}`;
     const thingsToSee = `${configResponses.HELP_PLAYER_CAN_SEE.text} a table, a door`;
     const inYourInventory = `${configResponses.HELP_PLAYER_INVENTORY.text} a knife, a ring`;
 
     const helpMessage = scene.help().text;
 
-    const expectedHelpMessage = `${placesToGoMessage}, ${thingsToSee}.${configResponses.HELP_PLAYER_CAN_DO.text}. ${inYourInventory}`;
+    const expectedHelpMessage = `${placesToGoMessage}. ${thingsToSee}. ${configResponses.HELP_PLAYER_CAN_DO.text}. ${inYourInventory}`;
     expect(helpMessage).toBe(expectedHelpMessage);
   })
 

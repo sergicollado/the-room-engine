@@ -72,22 +72,24 @@ const Scene = ({places, responseController, inventory, plotsController, player})
   }
 
   const help = () => {
-    const toGoDescriptions = places.map(({smallDescription}) => smallDescription.text).join(", ");
+    const conjunction = responseController.getResponse(ResponseDefinition.OR_CONJUNCTION).getText()
+    const toGoDescriptions = places.map(({smallDescription}) => smallDescription.text).join(` ${conjunction} `);
     const placesToGoMessage = `${responseController.getResponse(ResponseDefinition.HELP_PLAYER_CAN_GO).getText()} ${toGoDescriptions}`;
 
     const toSeeDescriptions = getCurrentPlace().getObjectsDescription();
     const thingsToSee = `${responseController.getResponse(ResponseDefinition.HELP_PLAYER_CAN_SEE).getText()} ${toSeeDescriptions}`;
 
     const inYourInventory = inventoryHelp();
-    return { text:`${placesToGoMessage}, ${thingsToSee}.${responseController.getResponse(ResponseDefinition.HELP_PLAYER_CAN_DO).getText()}. ${inYourInventory.text}`, image: getCurrentPlace().image};
+    return { text:`${placesToGoMessage}. ${thingsToSee}. ${responseController.getResponse(ResponseDefinition.HELP_PLAYER_CAN_DO).getText()}. ${inYourInventory.text}`, image: getCurrentPlace().image};
   }
 
   const inventoryHelp = () => {
     const text = inventory.getContentDescription();
     const image = responseController.getResponse(ResponseDefinition.HELP_PLAYER_INVENTORY).image;
     if(!text) {
-      return Response({text, image}, ResponseDefinition.HELP_PLAYER_INVENTORY );
+      return Response({text: "", image}, ResponseDefinition.HELP_PLAYER_INVENTORY );
     }
+
     const inYourInventory = `${responseController.getResponse(ResponseDefinition.HELP_PLAYER_INVENTORY).getText()} ${text}`;
     return Response({text: inYourInventory, image}, ResponseDefinition.HELP_PLAYER_INVENTORY );
   }

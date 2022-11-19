@@ -10,7 +10,7 @@ const Player = (currentPlace, inventory, responseController) => {
     see: (idObject) => {
       if (inventory.contains(idObject)) {
         if (!idObject) {
-          return currentPlace.getDescription();
+          return responseController.getResponse(ResponseDefinition.CANNOT_SEE_THIS);
         }
         const objectDescription = inventory.get(idObject).getDescription();
         return { text: objectDescription.text + responseController.getResponse(ResponseDefinition.SEE_AN_OBJECT_FROM_INVENTORY).getText(),
