@@ -1,13 +1,13 @@
 {
-  "name": "theroomengine",
+  "name": "the-room-engine",
   "version": "0.0.1",
-  "description": "",
+  "description": "Little package to storytelling.",
   "main": "src/index.js",
   "scripts": {
     "test": "jest"
   },
-  "author": "sergi_py",
-  "license": "ISC",
+  "author": "sergi_py sergicollado@gmail.com",
+  "license": "MIT",
   "dependencies": {
   },
   "devDependencies": {
