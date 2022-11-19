@@ -6,7 +6,7 @@ const {ResponseController} = require("./responseController");
 const {interactiveObjectMapper} = require("../shared/interactiveObjectsMapper");
 const {Player} = require("./player");
 
-const TheRoomEngine = ({configPlaces, configResponses, inventoryConfig=[], storyPlots=[]}) => {
+const TheRoomEngine = ({configPlaces, configResponses, inventoryConfig=[], storyPlots=[], continueGame=false}) => {
   const {currentPlace, placeList} = configPlaces;
   const places = placeList.map((config) => Place(config));
   const inventory = Inventory(inventoryConfig.map(interactiveObjectMapper));
@@ -22,7 +22,7 @@ const TheRoomEngine = ({configPlaces, configResponses, inventoryConfig=[], story
   }
 
 
-  const scene = Scene({places, responseController, inventory, plotsController, player:buildPlayer()});
+  const scene = Scene({places, responseController, inventory, plotsController, player:buildPlayer(), continueGame});
 
   return {
     scene,

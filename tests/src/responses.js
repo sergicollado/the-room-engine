@@ -15,4 +15,5 @@ exports.responses = {
   HELP_PLAYER_INVENTORY: {text:"In your inventory you have:",image:"helpInventoryImage"},
   OR_CONJUNCTION: {text: "or"},
   AND_CONJUNCTION: {text: "and"},
+  RESTART_SESSION: {text: "wait, it seams you already start the game, let's go to continue..."}
 }

@@ -95,6 +95,22 @@ describe('Story Plots', () => {
     expect(message).toStrictEqual(expectedInitialPlotMessage);
   })
 
+  test('the engine should return the continue sentence when the game already started', () => {
+    const aPlaceWhereRestart = {
+      id : "aPlaceWhereRestart",
+      description : {text:"aPlaceWhereRestart description", image:"aPlaceWhereRestart Image"},
+      };
+
+    const responses = {
+      [ResponseDefinition.RESTART_SESSION]: { text: "This is the intro of my story..."}
+    }
+    const scene = TheRoomEngine({configPlaces:{placeList:[aPlaceWhereRestart]}, configResponses:responses, continueGame:true}).scene;
+    const expectedInitialPlotMessage = {text: "This is the intro of my story...aPlaceWhereRestart description", image:"aPlaceWhereRestart Image"};
+
+    const message = scene.getInitialPlot();
+    expect(message).toStrictEqual(expectedInitialPlotMessage);
+  })
+
   test('the engine should return the FINISH StoryPlot', () => {
     const expectedInitialPlotMessage = {text: "This is THE END", image:"actionENDImage"};
     const message = scene.getTheEndPlot();

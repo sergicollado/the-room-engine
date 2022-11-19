@@ -2,9 +2,14 @@ const {ResponseDefinition} = require("./responseDefinition");
 const {Response} = require("./responseController");
 const { ActionType } = require("./actions");
 
-const Scene = ({places, responseController, inventory, plotsController, player}) => {
+const Scene = ({places, responseController, inventory, plotsController, player, continueGame=false}) => {
 
   const getInitialPlot = () => {
+    if(continueGame) {
+      const {description} = getCurrentPlace();
+      return {text: responseController.getResponse(ResponseDefinition.RESTART_SESSION).text + description.text,
+        image: description.image }
+    }
     return  plotsController.getInitialPlot().response;
   }
   const getTheEndPlot = () => {
@@ -123,4 +128,3 @@ const Scene = ({places, responseController, inventory, plotsController, player})
 }
 
 exports.Scene = Scene;
-
