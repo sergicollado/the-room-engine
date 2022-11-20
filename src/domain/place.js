@@ -1,12 +1,15 @@
 const {interactiveObjectMapper} = require("../shared/interactiveObjectsMapper");
+const {replaceConditionalSentence} = require("../shared/replaceConditionalSentence");
 const { Feature } = require("./interactiveObjects");
 
 const Place = ({id, description, smallDescription, objects=[]}) => {
-  let interactiveObjects = objects.map(interactiveObjectMapper);
-
   const getObject = (idObject) =>  {
     return interactiveObjects.find(({id , isNot}) => (id===idObject && isNot(Feature.HIDDEN)));
   };
+
+  const sentenceReplacer = (sentence) =>  replaceConditionalSentence(sentence,getObject);
+  let interactiveObjects = objects.map((element) => interactiveObjectMapper({...element, sentenceReplacer}));
+
   const getHiddenObject = (idObject) =>  {
     return interactiveObjects.find(({id , is}) => (id===idObject && is(Feature.HIDDEN)));
   };
@@ -25,25 +28,8 @@ const Place = ({id, description, smallDescription, objects=[]}) => {
     return {id, description, smallDescription, objects:primitiveObjects};
   }
 
-  const replaceConditionalSentence = (sentence) => {
-    const dependantContentMatches = sentence.matchAll(/<if=(.*?)>(.*?)<\/if>/g);
-    if(dependantContentMatches.length === 0) {
-      return sentence;
-    }
-
-    let responseText = sentence;
-    for (const match of dependantContentMatches) {
-      const [toReplace, idObject, contentDescription] = match;
-      const object = getObject(idObject);
-
-      let replacement = object? contentDescription : "";
-      responseText = responseText.replace(toReplace, replacement);
-    }
-    return responseText;
-  }
-
   const getDescription = () => {
-    const replacedText = replaceConditionalSentence(description.text)
+    const replacedText = replaceConditionalSentence(description.text, getObject)
 
     return {...description,text:replacedText};
   }

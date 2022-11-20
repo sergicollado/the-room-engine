@@ -19,8 +19,8 @@ describe('Inventory', () => {
       unlockMessage: undefined,
     }
    const expectedInventory = [
-      {...inventoryConfig[0], messages, useWithActions:[]},
-      {...inventoryConfig[1], messages, useWithActions:[]}];
+      {...inventoryConfig[0], ...messages, useWithActions:[]},
+      {...inventoryConfig[1], ...messages, useWithActions:[]}];
 
     expect(inventoryPrimitives).toStrictEqual(expectedInventory);
   });

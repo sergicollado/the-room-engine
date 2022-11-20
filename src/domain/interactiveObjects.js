@@ -18,6 +18,7 @@ const InteractiveObject = (
   features=[],
   messages,
   useWithActions=[],
+  sentenceReplacer
   ) => {
   const {openMessage, openDescription, readableText, lockedMessage, unlockMessage, errorUsing} = messages;
 
@@ -83,7 +84,8 @@ const InteractiveObject = (
       if(is(Feature.OPENABLE) && is(Feature.OPEN)) {
         return Response({...openDescription,responseDefinition: ResponseDefinition.SEE_AND_OBJECT});
       }
-      return Response({...description,responseDefinition: ResponseDefinition.SEE_AND_OBJECT});
+      const replacedText = sentenceReplacer(description.text);
+      return Response({text:replacedText,image:description.image,responseDefinition: ResponseDefinition.SEE_AND_OBJECT});
     },
 
     getReadableResponse: () => {

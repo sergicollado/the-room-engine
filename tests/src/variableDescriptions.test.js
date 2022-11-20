@@ -13,6 +13,8 @@ describe('Describe variable objects in descriptions', () => {
         {id: "coin", description: {text:"this is a hidden Object", image: "coinImage"},features:[Feature.HIDDEN]},
         {id: "door", description: {text:"it's a door", image: "doorImage"}, features:[Feature.OPENABLE], openMessage: {text:"the door is opened now you can see more things", image: "openDoorOpen"}, openDescription: {text:"From this door we can now watch a shadow", image: "openDoorDescriptionImage"}},
         {id: "pick", description: {text:"this is a pick", image: "pickImage"}},
+        {id: "notebook", description:{text: "this notebook, <if=pen>with a pen next to it</if>", image:"notebookImage"}},
+        {id: "pen", description: {text:"ti's a pen",image: "aPenImage"}}
       ]};
 
     const secondPlace ={
@@ -55,5 +57,14 @@ describe('Describe variable objects in descriptions', () => {
     const place = scene.getCurrentPlace();
     const description = place.getDescription();
     expect(description).toStrictEqual(expectedDescription);
+  })
+
+
+  test('an object should return a related object description when the object exists', () => {
+    const expectedDescription = "this notebook, with a pen next to it";
+    const object = scene.getCurrentPlace().getObject("notebook");
+
+    const descriptionText = object.getDescription().text;
+    expect(descriptionText).toBe(expectedDescription);
   })
 });
