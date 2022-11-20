@@ -75,6 +75,7 @@ describe('Primitives from Places', () => {
     expect(primitivesSecondPlace).toEqual({id:secondPlace.id, description:secondPlace.description});
     const expectedSecondPlaceObjectsLength = 2;
     expect(placesPrimitives[1].objects.length).toEqual(expectedSecondPlaceObjectsLength);
+    expect(placesPrimitives[1].objects[0].readableText).toEqual({text:"book text content when is read", image: "bookImage"});
   })
 })
 

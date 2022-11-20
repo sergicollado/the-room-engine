@@ -26,7 +26,7 @@ const InteractiveObject = (
       description,
       smallDescription,
       features,
-      messages,
+      ...messages,
       useWithActions};
   };
 
