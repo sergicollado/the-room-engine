@@ -25,24 +25,27 @@ const Place = ({id, description, smallDescription, objects=[]}) => {
     return {id, description, smallDescription, objects:primitiveObjects};
   }
 
-  const getDescription = () => {
-    const dependantContentMatches = description.text.matchAll(/<if=(.*?)>(.*?)<\/if>/g);
+  const replaceConditionalSentence = (sentence) => {
+    const dependantContentMatches = sentence.matchAll(/<if=(.*?)>(.*?)<\/if>/g);
     if(dependantContentMatches.length === 0) {
-      return description;
+      return sentence;
     }
 
-    let responseText = description.text;
+    let responseText = sentence;
     for (const match of dependantContentMatches) {
       const [toReplace, idObject, contentDescription] = match;
       const object = getObject(idObject);
-      if(!object){
-        responseText = responseText.replace(toReplace,"");
-      }else{
-        responseText = responseText.replace(toReplace,contentDescription);
-      }
-    }
 
-    return {...description,text:responseText};
+      let replacement = object? contentDescription : "";
+      responseText = responseText.replace(toReplace, replacement);
+    }
+    return responseText;
+  }
+
+  const getDescription = () => {
+    const replacedText = replaceConditionalSentence(description.text)
+
+    return {...description,text:replacedText};
   }
 
   return {
