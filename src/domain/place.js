@@ -25,6 +25,26 @@ const Place = ({id, description, smallDescription, objects=[]}) => {
     return {id, description, smallDescription, objects:primitiveObjects};
   }
 
+  const getDescription = () => {
+    const dependantContentMatches = description.text.matchAll(/<if=(.*?)>(.*?)<\/if>/g);
+    if(dependantContentMatches.length === 0) {
+      return description;
+    }
+
+    let responseText = description.text;
+    for (const match of dependantContentMatches) {
+      const [toReplace, idObject, contentDescription] = match;
+      const object = getObject(idObject);
+      if(!object){
+        responseText = responseText.replace(toReplace,"");
+      }else{
+        responseText = responseText.replace(toReplace,contentDescription);
+      }
+    }
+
+    return {...description,text:responseText};
+  }
+
   return {
     id,
     description,
@@ -33,7 +53,8 @@ const Place = ({id, description, smallDescription, objects=[]}) => {
     getHiddenObject,
     getObjectsDescription,
     removeObject,
-    getPrimitives
+    getPrimitives,
+    getDescription
   }
 }
 

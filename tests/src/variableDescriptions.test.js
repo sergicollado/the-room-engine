@@ -1,20 +1,18 @@
 const { TheRoomEngine, Feature, ActionType } = require("../../src/domain");
-const { ResponseDefinition } = require("../../src/domain/responseDefinition");
 const {responses: configResponses} = require("./responses");
 
-describe('Hidden Objects behaviour', () => {
+describe('Describe variable objects in descriptions', () => {
   let scene;
-  let player;
 
   beforeEach(() => {
     const firstPlace = {
       id : "firstPlace",
-      description :{text:"first place description", image: "firstPlaceImage"},
+      description :{text:"first place description, contains a drawer,<if=pick> a pick,</if><if=coin> a coin,</if> a door<if=key> and a key</if>", image: "firstPlaceImage"},
       objects: [
         {id: "drawer", description: {text:"a  drawer", image: "drawerImage"},features:[Feature.OPENABLE], openMessage: {text:"the drawer is opened now you can see more things",image:""}, openDescription:{text: "within the drawer we can see now a COIN", image:""}},
         {id: "coin", description: {text:"this is a hidden Object", image: "coinImage"},features:[Feature.HIDDEN]},
         {id: "door", description: {text:"it's a door", image: "doorImage"}, features:[Feature.OPENABLE], openMessage: {text:"the door is opened now you can see more things", image: "openDoorOpen"}, openDescription: {text:"From this door we can now watch a shadow", image: "openDoorDescriptionImage"}},
-        {id: "key", description: {text:"a key", image: "keyImage"}, features:[Feature.USABLE]}
+        {id: "pick", description: {text:"this is a pick", image: "pickImage"}},
       ]};
 
     const secondPlace ={
@@ -36,23 +34,26 @@ describe('Hidden Objects behaviour', () => {
     ]
 
     scene = TheRoomEngine({configPlaces:{placeList:[firstPlace,secondPlace]}, configResponses, storyPlots}).scene;
-    player = scene.player;
   })
 
-  test('the player CANNOT see HIDDEN objects', () => {
-    const expectedNotFoundResponse = {responseDefinition: ResponseDefinition.CANNOT_SEE_THIS, text:"message when player cannot see something",image:"cannotSeeImage"};
-    const notFoundResponse = player.see("coin");
-    expect(notFoundResponse.getPrimitives()).toStrictEqual(expectedNotFoundResponse);
+  test('a place should not return a description object when does not exists in a place', () => {
+    const expectedDescription = {text:"first place description, contains a drawer, a pick, a door",image:"firstPlaceImage"};
+    const place = scene.getCurrentPlace();
+    const description = place.getDescription();
+    expect(description).toStrictEqual(expectedDescription);
   })
 
-  test('the player can see previously HIDDEN objects after an action allow hem/her to discover them', () => {
-    const expectedPlotResponse = {responseDefinition: ResponseDefinition.PLOT_SUCCESS, text:"opening this drawer a COIN is showed",image:"drawerImage"};
-    const plotOpenResponse = player.open("drawer");
-    expect(plotOpenResponse).toStrictEqual(expectedPlotResponse);
-
-    const expectedCoinResponse = {text:"this is a hidden Object", image: "coinImage", responseDefinition: ResponseDefinition.SEE_AND_OBJECT};
-    const coinResponse = player.see("coin");
-    expect(coinResponse.getPrimitives()).toStrictEqual(expectedCoinResponse );
+  test('a place should return a description object when exists in a place', () => {
+    const expectedDescription = {text:"first place description, contains a drawer, a pick, a door",image:"firstPlaceImage"};
+    const place = scene.getCurrentPlace();
+    const description = place.getDescription();
+    expect(description).toStrictEqual(expectedDescription);
   })
 
+  test('a place should return a description object when exists in a place', () => {
+    const expectedDescription = {text:"first place description, contains a drawer, a pick, a door",image:"firstPlaceImage"};
+    const place = scene.getCurrentPlace();
+    const description = place.getDescription();
+    expect(description).toStrictEqual(expectedDescription);
+  })
 });
