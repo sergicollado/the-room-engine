@@ -71,6 +71,9 @@ const Player = (currentPlace, inventory, responseController) => {
     },
 
     use: (interactiveObject) => {
+      if(interactiveObject.is(Feature.USABLE)){
+        return interactiveObject.getWhenUsingMessage();
+      }
       return {
         with: (interactiveObjectWith) => {
           return interactiveObjectWith.useWith(interactiveObject);

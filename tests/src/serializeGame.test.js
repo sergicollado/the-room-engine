@@ -17,6 +17,7 @@ describe('Inventory', () => {
       openMessage: undefined,
       readableText: undefined,
       unlockMessage: undefined,
+      whenUsingMessage: undefined,
     }
    const expectedInventory = [
       {...inventoryConfig[0], ...messages, useWithActions:[]},
@@ -45,7 +46,7 @@ describe('Primitives from Places', () => {
           errorUsing: {text:"it doesn't seem to work", image: "toUnlockImage"},
           useWithActions: [{id:"key", action: ActionType.UNLOCK}],
         },
-        {id: "key", description: {text:"a key", image: "keyImage"}, features:[Feature.USABLE]}
+        {id: "key", description: {text:"a key", image: "keyImage"}, features:[Feature.USABLE_WITH]}
       ]};
 
     const secondPlace ={

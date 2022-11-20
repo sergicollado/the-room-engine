@@ -1,6 +1,7 @@
 const {ResponseDefinition} = require("./responseDefinition");
 const {Response} = require("./responseController");
 const { ActionType } = require("./actions");
+const { Feature } = require("./interactiveObjects");
 
 const Scene = ({places, responseController, inventory, plotsController, player, continueGame=false}) => {
 
@@ -52,16 +53,18 @@ const Scene = ({places, responseController, inventory, plotsController, player, 
     const place = player.getCurrentPlace();
     const first = player.getObject(firstElementId);
     const second = player.getObject(secondElementId);
-    if (!first || !second) {
+    if (!first && !second) {
       return responseController.getResponse(ResponseDefinition.ERROR_USING_OBJECT_WITH);
     }
-
-    const response = player.use(first).with(second);
-    if(!response) {
-      return responseController.getResponse(ResponseDefinition.ERROR_USING_OBJECT_WITH);
+    let response;
+    if (!second) {
+      response = player.use(first);
+    } else{
+      response = player.use(first).with(second);
     }
 
-    if (response.responseDefinition === ResponseDefinition.ERROR_USING_OBJECT_WITH) {
+    const {responseDefinition} = response || {};
+    if (!response || responseDefinition === ResponseDefinition.ERROR_USING_OBJECT_WITH) {
       return responseController.getResponse(ResponseDefinition.ERROR_USING_OBJECT_WITH);
     }
 

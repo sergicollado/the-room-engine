@@ -9,6 +9,8 @@ const { Response } = require("./responseController");
   OPEN: "OPEN",
   LOCKED: "LOCKED",
   HIDDEN: "HIDDEN",
+  USABLE: "USABLE",
+  USABLE_WITH: "USABLE_WITH"
 }
 
 const InteractiveObject = (
@@ -20,7 +22,7 @@ const InteractiveObject = (
   useWithActions=[],
   sentenceReplacer
   ) => {
-  const {openMessage, openDescription, readableText, lockedMessage, unlockMessage, errorUsing} = messages;
+  const {openMessage, openDescription, readableText, lockedMessage, unlockMessage, whenUsingMessage} = messages;
 
   const getPrimitives = () => {
     return {  id,
@@ -52,7 +54,7 @@ const InteractiveObject = (
     return lockedMessage;
   };
   const removeFeature = (featureToRemove) => {
-    features= features.filter((feature) => { feature!==featureToRemove});
+    features= features.filter((feature) => feature!==featureToRemove );
   };
 
   return {
@@ -89,9 +91,12 @@ const InteractiveObject = (
     },
 
     getReadableResponse: () => {
-      return readableText;
+      return Response({...readableText, responseDefinition: ResponseDefinition.READ_AND_OBJECT});
     },
 
+    getWhenUsingMessage: () => {
+      return Response({...whenUsingMessage, responseDefinition: ResponseDefinition.USING});
+    },
     addFeature: (featureToAdd)  => {
       features.push(featureToAdd);
     },

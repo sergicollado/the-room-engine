@@ -24,7 +24,7 @@ describe('Actions requirements and locks', () => {
           errorUsing: {text:"it doesn't seem to work", image: "toUnlockImage"},
           useWithActions: [{id:"key", action: ActionType.UNLOCK}],
         },
-        {id: "key", description: {text:"a key", image: "keyImage"}, features:[Feature.USABLE]}
+        {id: "key", description: {text:"a key", image: "keyImage"}, features:[Feature.USABLE_WITH]}
       ]};
 
     const secondPlace ={
@@ -43,7 +43,6 @@ describe('Actions requirements and locks', () => {
 
     scene = TheRoomEngine({configPlaces:{placeList:[firstPlace,secondPlace]}, configResponses}).scene;
     player = scene.player;
-    inventory = scene.inventory;
   })
 
   test('the player can open openable things', () => {

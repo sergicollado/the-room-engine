@@ -9,11 +9,12 @@ const interactiveObjectMapper = ({id,
   readableText,
   lockedMessage,
   unlockMessage,
+  whenUsingMessage,
   errorUsing,
   useWithActions=[],
-  sentenceReplacer
+  sentenceReplacer,
 }) => {
-  return InteractiveObject(id, description, smallDescription, features, {openDescription, openMessage, readableText, lockedMessage, unlockMessage, errorUsing}, useWithActions, sentenceReplacer);
+  return InteractiveObject(id, description, smallDescription, features, {openDescription, openMessage, readableText, lockedMessage, unlockMessage, errorUsing, whenUsingMessage}, useWithActions, sentenceReplacer);
 }
 
 exports.interactiveObjectMapper = interactiveObjectMapper;

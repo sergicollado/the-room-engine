@@ -19,7 +19,10 @@ const firstPlace = {
       openDescription: {text:"From this door we can now watch a little carrousel",image:""},
       useWithActions: [{id:"key", action: ActionType.UNLOCK}]
     },
-    {id: "key", smallDescription: {text:"a key",image:""}, description: {text:"a key",image:""}, features:[Feature.USABLE, Feature.HIDDEN]}
+    {id: "key", smallDescription: {text:"a key",image:""}, description: {text:"a key",image:""}, features:[Feature.HIDDEN]},
+    {id: "pool", description: {text:"door description",image:""}, smallDescription: {text:"a pool",image:""},
+    features: [Feature.USABLE], whenUsingMessage:{text:"I don't feel like swimming in the pool right now."}
+  },
   ]};
 
 const secondPlace = {
@@ -181,5 +184,12 @@ describe('Actions in a place', () => {
     const text = player.read("note").text;
     expect(text).toBe(expectedObjectTextFromInventory);
   })
+
+  test('the player can use a usable object', () => {
+    const expectedText = "I don't feel like swimming in the pool right now.";
+    const response = player.use("pool");
+    expect(response.text).toBe(expectedText);
+  })
+
 });
 
