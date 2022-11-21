@@ -101,7 +101,7 @@ describe('Actions requirements and locks', () => {
   })
 
   test('the player should get suitable info when openable things are already opened', () => {
-    const expectedObjectDescription = {image: "openDoorDescriptionImage", text: "From this door we can now watch a shadow", responseDefinition: ResponseDefinition.SEE_AND_OBJECT};
+    const expectedObjectDescription = {image: "openDoorDescriptionImage", text: "From this door we can now watch a shadow", responseDefinition: ResponseDefinition.ALREADY_OPEN_MESSAGE};
     player.open("door");
     const alreadyOpenedDoorMessage = player.open("door");
     expect(alreadyOpenedDoorMessage.getPrimitives()).toStrictEqual(expectedObjectDescription);

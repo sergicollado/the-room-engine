@@ -46,10 +46,9 @@ const Scene = ({places, responseController, inventory, plotsController, player, 
 
   const open = (idObject) => {
     const message = player.open(idObject);
-    console.log("🚀 ~ file: scene.js ~ line 49 ~ open ~ message", message)
     const place = player.getCurrentPlace();
     let plotMessage;
-    if (message.ResponseDefinition === ResponseDefinition.OPEN_MESSAGE) {
+    if (message.responseDefinition === ResponseDefinition.OPEN_MESSAGE) {
       const {text , image} = plotsController.runPlot({action: ActionType.OPEN, targetId: idObject, place}) || {};
       if (text) {
         plotMessage = {text,image, responseDefinition: ResponseDefinition.PLOT_SUCCESS}

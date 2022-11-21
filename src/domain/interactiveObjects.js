@@ -83,7 +83,7 @@ const InteractiveObject = (
         return Response({...getTryToOpenButLockedMessage(), responseDefinition: ResponseDefinition.IS_LOCKED});
       }
       if(is(Feature.OPEN)) {
-        return getDescription();
+        return Response({...getDescription(), responseDefinition: ResponseDefinition.ALREADY_OPEN_MESSAGE});
       }
       features.push(Feature.OPEN);
       return Response({...getOpenMessage(), responseDefinition: ResponseDefinition.OPEN_MESSAGE});
