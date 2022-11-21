@@ -40,8 +40,10 @@ describe('Actions requirements and locks', () => {
           description: {text:"knife description", image: "knifeImage"},
           features:[Feature.PORTABLE]
         }]};
-
-    scene = TheRoomEngine({configPlaces:{placeList:[firstPlace,secondPlace]}, configResponses}).scene;
+    const storyPlots = [
+      { action: { type: ActionType.OPEN, target: "doorToUnlock"},response: {text: "has been opened and unlock", image:"actionOpenImage"}},
+    ]
+    scene = TheRoomEngine({configPlaces:{placeList:[firstPlace,secondPlace]}, configResponses, storyPlots}).scene;
     player = scene.player;
   })
 
