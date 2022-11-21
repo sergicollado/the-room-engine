@@ -18,8 +18,17 @@ const Scene = ({places, responseController, inventory, plotsController, player, 
   }
 
   const see = (idObject) => {
-    return player.see(idObject);
+    const message =  player.see(idObject);
+    const place = player.getCurrentPlace();
+    const {text , image} = plotsController.runPlot({action: ActionType.SEE, targetId: idObject, place}) || {};
+
+    let plotMessage;
+    if (text) {
+      plotMessage = {text,image, responseDefinition: ResponseDefinition.PLOT_SUCCESS}
+    }
+    return plotMessage || message;
   }
+
   const read = (idObject) => {
     return player.readObject(idObject);
   }

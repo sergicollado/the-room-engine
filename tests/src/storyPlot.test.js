@@ -39,6 +39,16 @@ describe('Story Plots', () => {
           description: {text:"white milk", image:""},
           features:[Feature.USABLE],
           whenUsingMessage: {text:"I lit up the light.", image:"lightImage"}
+        },{
+          id: "book",
+          description: {text:"a book", image:""},
+          smallDescription: {text:"a book", image:""},
+        },
+        {
+          id: "photo",
+          description: {text:"a photo", image:""},
+          smallDescription: {text:"a photo", image:""},
+          features: [Feature.HIDDEN]
         },
       ]
     };
@@ -59,6 +69,7 @@ describe('Story Plots', () => {
       { action: { type: ActionType.MOVE, target: "secondPlace"},response: {text: "a custom plot after MOVE action", image:"actionMoveImage"}},
       { action: { type: ActionType.OPEN, target: "door"},response: {text: "a custom plot after an OPEN action", image:"actionOpenImage"}},
       { action: { type: ActionType.USE, target: "milk"},response: {text: "milk gets cacao", image:"actionUseMilkImage"}},
+      { action: { type: ActionType.SEE, target: "book"},trigger: { type: ActionType.UNHIDE, target: "photo"}, response: {text: "the book has been seen and the photo is shown", image:"bookImage"}},
       { action: { type: ActionType.THE_END},response: {text: "This is THE END", image:"actionENDImage"}},
     ]
 
@@ -70,6 +81,19 @@ describe('Story Plots', () => {
     const expectedActionMovePlotResponse =  {image: "actionMoveImage", text: "a custom plot after MOVE action"};
     const message = player.moveTo("secondPlace");
     expect(message).toStrictEqual(expectedActionMovePlotResponse);
+  })
+
+  test('the engine should return an story plot after SEE action', () => {
+    const expectedActionMovePlotResponse =  {image: "bookImage", text: "the book has been seen and the photo is shown",responseDefinition:"PLOT_SUCCESS"};
+    const message = player.see("book");
+    expect(message).toStrictEqual(expectedActionMovePlotResponse);
+
+    const expectedUnhideMessage = {
+      image: "",
+      responseDefinition: "SEE_AND_OBJECT",
+      text: "a photo"};
+    const unhiddenPhotoMessage = player.see("photo");
+    expect(unhiddenPhotoMessage.getPrimitives()).toStrictEqual(expectedUnhideMessage);
   })
 
   test('the engine should return a place description if story it has not an storyPlot associated', () => {

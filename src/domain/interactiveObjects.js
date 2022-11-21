@@ -45,6 +45,7 @@ const InteractiveObject = (
     };
   const unlock = () => {
     removeFeature(Feature.LOCKED);
+    features.push(Feature.OPEN);
   };
   const unhide = () => {
     removeFeature(Feature.HIDDEN);
