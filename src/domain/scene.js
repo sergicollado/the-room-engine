@@ -1,7 +1,6 @@
 const {ResponseDefinition} = require("./responseDefinition");
 const {Response} = require("./responseController");
 const { ActionType } = require("./actions");
-const { Feature } = require("./interactiveObjects");
 
 const Scene = ({places, responseController, inventory, plotsController, player, continueGame=false}) => {
 
@@ -20,17 +19,17 @@ const Scene = ({places, responseController, inventory, plotsController, player, 
   const see = (idObject) => {
     const message =  player.see(idObject);
     const place = player.getCurrentPlace();
-    const {text , image} = plotsController.runPlot({action: ActionType.SEE, targetId: idObject, place}) || {};
+    const plotMessage = plotsController.runPlot({action: ActionType.SEE, targetId: idObject, place});
 
-    let plotMessage;
-    if (text) {
-      plotMessage = {text,image, responseDefinition: ResponseDefinition.PLOT_SUCCESS}
-    }
     return plotMessage || message;
   }
 
   const read = (idObject) => {
-    return player.readObject(idObject);
+    const message = player.readObject(idObject);
+    const place = player.getCurrentPlace();
+    const plotMessage = plotsController.runPlot({action: ActionType.READ, targetId: idObject, place});
+
+    return plotMessage || message;
   }
 
   const moveTo = (placeId) => {
@@ -49,10 +48,8 @@ const Scene = ({places, responseController, inventory, plotsController, player, 
     const place = player.getCurrentPlace();
     let plotMessage;
     if (message.responseDefinition === ResponseDefinition.OPEN_MESSAGE) {
-      const {text , image} = plotsController.runPlot({action: ActionType.OPEN, targetId: idObject, place}) || {};
-      if (text) {
-        plotMessage = {text,image, responseDefinition: ResponseDefinition.PLOT_SUCCESS}
-      }
+      plotMessage = plotsController.runPlot({action: ActionType.OPEN, targetId: idObject, place});
+
     }
     return plotMessage || message;
 

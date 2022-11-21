@@ -41,6 +41,7 @@ describe('Story Plots', () => {
           whenUsingMessage: {text:"I lit up the light.", image:"lightImage"}
         },{
           id: "book",
+          features:[Feature.READABLE],
           description: {text:"a book", image:""},
           smallDescription: {text:"a book", image:""},
         },
@@ -71,6 +72,7 @@ describe('Story Plots', () => {
       { action: { type: ActionType.USE, target: "milk"},response: {text: "milk gets cacao", image:"actionUseMilkImage"}},
       { action: { type: ActionType.SEE, target: "book"},trigger: { type: ActionType.UNHIDE, target: "photo"}, response: {text: "the book has been seen and the photo is shown", image:"bookImage"}},
       { action: { type: ActionType.THE_END},response: {text: "This is THE END", image:"actionENDImage"}},
+      { action: { type: ActionType.READ, target: "book"},trigger: { type: ActionType.THE_END}, response: {text: "this is the END", image:"endImage"}},
     ]
 
     scene = TheRoomEngine({configPlaces:{placeList:[firstPlace,secondPlace, thirdPlace]}, configResponses, inventoryConfig, storyPlots}).scene;
@@ -78,15 +80,15 @@ describe('Story Plots', () => {
   })
 
   test('the engine should return an story plot after MOVE action', () => {
-    const expectedActionMovePlotResponse =  {image: "actionMoveImage", text: "a custom plot after MOVE action"};
+    const expectedActionMovePlotResponse =  {image: "actionMoveImage", text: "a custom plot after MOVE action","responseDefinition": "PLOT_SUCCESS"};
     const message = player.moveTo("secondPlace");
-    expect(message).toStrictEqual(expectedActionMovePlotResponse);
+    expect(message.getPrimitives()).toStrictEqual(expectedActionMovePlotResponse);
   })
 
   test('the engine should return an story plot after SEE action', () => {
     const expectedActionMovePlotResponse =  {image: "bookImage", text: "the book has been seen and the photo is shown",responseDefinition:"PLOT_SUCCESS"};
     const message = player.see("book");
-    expect(message).toStrictEqual(expectedActionMovePlotResponse);
+    expect(message.getPrimitives()).toStrictEqual(expectedActionMovePlotResponse);
 
     const expectedUnhideMessage = {
       image: "",
@@ -102,10 +104,16 @@ describe('Story Plots', () => {
     expect(message).toStrictEqual(expectedMoveResponse);
   })
 
-  test('the engine should return an story plot after open action', () => {
+  test('the engine should return an story plot after OPEN action', () => {
     const expectedActionMovePlotResponse = {image: "actionOpenImage", text: "a custom plot after an OPEN action", responseDefinition: ResponseDefinition.PLOT_SUCCESS};
     const message = player.open("door");
-    expect(message).toStrictEqual(expectedActionMovePlotResponse);
+    expect(message.getPrimitives()).toStrictEqual(expectedActionMovePlotResponse);
+  })
+
+  test('the engine should return an story plot after READ action', () => {
+    const expectedActionReadPlotResponse = {image: "endImage", text: "this is the END", responseDefinition: ResponseDefinition.THE_END};
+    const message = player.read("book");
+    expect(message.getPrimitives()).toStrictEqual(expectedActionReadPlotResponse);
   })
 
   test('the engine should NOT return the storyPlot because has not an associated storyPlot', () => {
@@ -115,9 +123,9 @@ describe('Story Plots', () => {
   })
 
   test('the engine should return an story plot after use an object with other one', () => {
-    const expectedActionMovePlotMessage = {image: "actionUseMilkImage", text: "milk gets cacao"};
+    const expectedActionMovePlotMessage = {image: "actionUseMilkImage", text: "milk gets cacao", responseDefinition: ResponseDefinition.PLOT_SUCCESS};
     const message = player.use("milk", "cacao");
-    expect(message).toStrictEqual(expectedActionMovePlotMessage);
+    expect(message.getPrimitives()).toStrictEqual(expectedActionMovePlotMessage);
   })
 
   test('the engine should return the initial StoryPlot', () => {

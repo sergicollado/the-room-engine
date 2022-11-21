@@ -50,7 +50,7 @@ describe('Hidden Objects behaviour', () => {
   test('the player can see previously HIDDEN objects after an action allow hem/her to discover them', () => {
     const expectedPlotResponse = {responseDefinition: ResponseDefinition.PLOT_SUCCESS, text:"opening this drawer and a newspaper is shown",image:"drawerImage"};
     const plotOpenResponse = player.open("drawer");
-    expect(plotOpenResponse).toStrictEqual(expectedPlotResponse);
+    expect(plotOpenResponse.getPrimitives()).toStrictEqual(expectedPlotResponse);
 
     const expectedCoinResponse = {text:"this is a hidden Object", image: "coinImage", responseDefinition: ResponseDefinition.SEE_AND_OBJECT};
     const coinResponse = player.see("coin");
@@ -60,7 +60,7 @@ describe('Hidden Objects behaviour', () => {
   test('the player can see must than one previously HIDDEN objects after an action allow hem/her to discover them', () => {
     const expectedPlotResponse = {responseDefinition: ResponseDefinition.PLOT_SUCCESS, text:"opening this drawer and a newspaper is shown",image:"drawerImage"};
     const plotOpenResponse = player.open("drawer");
-    expect(plotOpenResponse).toStrictEqual(expectedPlotResponse);
+    expect(plotOpenResponse.getPrimitives()).toStrictEqual(expectedPlotResponse);
 
     const expectedCoinResponse = {text:"this is a hidden Object", image: "coinImage", responseDefinition: ResponseDefinition.SEE_AND_OBJECT};
     const coinResponse = player.see("coin");

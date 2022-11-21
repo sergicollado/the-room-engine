@@ -1,4 +1,6 @@
 const { ActionType } = require("./actions");
+const {ResponseDefinition} = require("./responseDefinition");
+const {Response} = require("./responseController")
 
 exports.StoryPlots = (plotsConfig) => {
 
@@ -17,20 +19,27 @@ exports.StoryPlots = (plotsConfig) => {
   }
 
   const runPlot = ({action, targetId, place}) => {
-    const plots = getPlots(action, targetId) || {};
+    const plots = getPlots(action, targetId);
+    if(plots.length === 0) {
+      return;
+    }
 
     let finalResponse;
     plots.forEach(({ response, trigger }) => {
       finalResponse = response;
+      finalResponse.responseDefinition = ResponseDefinition.PLOT_SUCCESS;
       if(trigger) {
         if (trigger.type === ActionType.UNHIDE) {
           const targetTrigger = place.getHiddenObject(trigger.target);
           targetTrigger.unhide();
         }
+        if (trigger.type === ActionType.THE_END) {
+          finalResponse.responseDefinition = ResponseDefinition.THE_END;
+        }
       }
     });
 
-    return finalResponse;
+    return Response(finalResponse);
   }
 
   return {
