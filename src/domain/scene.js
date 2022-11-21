@@ -56,14 +56,19 @@ const Scene = ({places, responseController, inventory, plotsController, player, 
     if (!first && !second) {
       return responseController.getResponse(ResponseDefinition.ERROR_USING_OBJECT_WITH);
     }
-    let response;
-    if (!second) {
-      response = player.use(first);
-    } else{
-      response = player.use(first).with(second);
+    const response = player.use(first);
+    if (response.responseDefinition === ResponseDefinition.CANNOT_USE_THIS) {
+      return response;
     }
 
-    const {responseDefinition} = response || {};
+    if (response.responseDefinition === ResponseDefinition.USING) {
+      const plotMessageFromFirst = plotsController.runPlot({action: ActionType.USE, targetId:firstElementId, place});
+      return plotMessageFromFirst || response;
+    }
+
+    const responseUsingWith = player.use(first).with(second);
+
+    const {responseDefinition} = responseUsingWith || {};
     if (!response || responseDefinition === ResponseDefinition.ERROR_USING_OBJECT_WITH) {
       return responseController.getResponse(ResponseDefinition.ERROR_USING_OBJECT_WITH);
     }
@@ -72,7 +77,7 @@ const Scene = ({places, responseController, inventory, plotsController, player, 
     const plotMessageFromSecond = plotsController.runPlot({action: ActionType.USE, targetId:secondElementId, place});
     const plotMessage = plotMessageFromFirst || plotMessageFromSecond;
 
-    return plotMessage || response;
+    return plotMessage || responseUsingWith;
   }
 
   const getCurrentPlace = () => {

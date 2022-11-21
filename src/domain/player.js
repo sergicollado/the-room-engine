@@ -71,6 +71,9 @@ const Player = (currentPlace, inventory, responseController) => {
     },
 
     use: (interactiveObject) => {
+      if(interactiveObject.isNot(Feature.USABLE) && interactiveObject.isNot(Feature.USABLE_WITH)) {
+        return responseController.getResponse(ResponseDefinition.CANNOT_USE_THIS);
+      }
       if(interactiveObject.is(Feature.USABLE)){
         return interactiveObject.getWhenUsingMessage();
       }

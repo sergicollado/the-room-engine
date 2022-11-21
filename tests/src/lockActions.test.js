@@ -94,7 +94,7 @@ describe('Actions requirements and locks', () => {
 
     expect(doorToUnlock.is(Feature.LOCKED)).toBe(true);
 
-    const expectMessage = { image: "errorUsingImage", responseDefinition: "ERROR_USING_OBJECT_WITH", text: "it doesn't seem to work"};
+    const expectMessage = { image: undefined, responseDefinition: "CANNOT_USE_THIS", text: "sorry but, I cant use this"};
     expect(response.getPrimitives()).toStrictEqual(expectMessage);
   })
 

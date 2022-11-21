@@ -191,5 +191,10 @@ describe('Actions in a place', () => {
     expect(response.text).toBe(expectedText);
   })
 
+  test('when player is trying to use a not usable or usableWith object', () => {
+    const expectedText = "sorry but, I cant use this";
+    const response = player.use("note");
+    expect(response.text).toBe(expectedText);
+  })
 });
 

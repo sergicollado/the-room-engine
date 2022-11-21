@@ -25,14 +25,21 @@ describe('Story Plots', () => {
           id: "milk",
           description: {text:"white milk", image:""},
           errorUsing: {text:"it doesn't seem to work", image:"milkErrorUsingImage"},
+          features:[Feature.USABLE_WITH],
           useWithActions: [{id:"cacao", action: ActionType.PLOT}],
         },
         {
           id: "cacao",
           description: {text:"cacao", image:""},
           errorUsing:{text:"it doesn't seem to work", image:"cacaoErrorUsingImage"},
+          features:[Feature.USABLE_WITH],
           useWithActions: [{id:"milk", action: ActionType.PLOT}],
-        }
+        },{
+          id: "switch",
+          description: {text:"white milk", image:""},
+          features:[Feature.USABLE],
+          whenUsingMessage: {text:"I lit up the light.", image:"lightImage"}
+        },
       ]
     };
 
@@ -116,4 +123,11 @@ describe('Story Plots', () => {
     const message = scene.getTheEndPlot();
     expect(message).toStrictEqual(expectedInitialPlotMessage);
   })
+
+  test('the engine should return whenUsingMessage', () => {
+    const expectedWhenUsingMessage = {text:"I lit up the light.", image:"lightImage", responseDefinition: ResponseDefinition.USING};
+    const message = player.use("switch");
+    expect(message.getPrimitives()).toStrictEqual(expectedWhenUsingMessage);
+  })
+
 });
