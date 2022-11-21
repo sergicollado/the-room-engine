@@ -120,7 +120,9 @@ const Scene = ({places, responseController, inventory, plotsController, player, 
   const addToInventory = (idObject) => {
     return player.addToInventory(idObject);
   }
-
+  const getStoryPlots = () => {
+    return plotsController;
+  }
   return {
     player: {
       moveTo,
@@ -138,6 +140,7 @@ const Scene = ({places, responseController, inventory, plotsController, player, 
     inventoryHelp,
     getInitialPlot,
     getTheEndPlot,
+    getStoryPlots
   }
 }
 

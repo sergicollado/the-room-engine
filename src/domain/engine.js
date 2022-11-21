@@ -29,7 +29,8 @@ const TheRoomEngine = ({configPlaces, configResponses, inventoryConfig=[], story
     getPrimitives: () => ({
       places: places.map((place) => place.getPrimitives()),
       inventory: inventory.getPrimitives(),
-      currentPlace: scene.getCurrentPlace().id
+      currentPlace: scene.getCurrentPlace().id,
+      storyPlots: scene.getStoryPlots().getPrimitives()
     })
   }
 }

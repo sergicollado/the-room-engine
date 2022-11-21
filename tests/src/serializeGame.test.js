@@ -1,4 +1,5 @@
 const { Feature, ActionType, TheRoomEngine } = require("../../src/domain");
+const { StoryPlots } = require("../../src/domain/storyPlots");
 
 describe('Inventory', () => {
   it('should return the primitives', () => {
@@ -95,5 +96,40 @@ describe('Player current place', () => {
 
     const expectedPlace = "anotherPlace";
     expect(currentPlace).toStrictEqual(expectedPlace);
+  });
+});
+
+describe('storyPlots', () => {
+  it('should return the primitives', () => {
+    const inventoryConfig = [
+    ];
+    const storyPlots = [
+      { action: { type: ActionType.MOVE, target: "secondPlace"},response: {text: "a custom plot after MOVE action", image:"actionMoveImage"}},
+      { action: { type: ActionType.OPEN, target: "door"},response: {text: "a custom plot after an OPEN action", image:"actionOpenImage"}},
+    ]
+    const { description, smallDescription} = ["a description", "anSmallDescription"];
+    const places = [
+      {id: "aPlace",
+        description,
+        smallDescription,
+        objects: [
+          {
+            id: "door",
+            description: {text:"it's a door", image:""},
+            features:[Feature.OPENABLE],
+            openMessage: {text:"the door is opened now you can see more things", image:"doorOpenMessageImage"},
+            openDescription: {text:"From this door we can now watch a shadow", image:"doorOpenMessageDescriptionImage"}},
+        ]
+      }
+    ]
+    const engine = TheRoomEngine({configPlaces:{placeList:places}, configResponses:{}, inventoryConfig, storyPlots});
+
+    engine.scene.player.open("door");
+    const {storyPlots: plots} = engine.getPrimitives();
+   const expectedPlots = [
+    { action: { type: ActionType.MOVE, target: "secondPlace"},response: {text: "a custom plot after MOVE action", image:"actionMoveImage"}},
+  ];
+
+    expect(plots).toStrictEqual(expectedPlots);
   });
 });

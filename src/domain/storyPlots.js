@@ -45,10 +45,11 @@ exports.StoryPlots = (plotsConfig) => {
     removeUsedPlots(action, targetId);
     return Response(finalResponse);
   }
-
+  const getPrimitives = () => plotsConfig;
   return {
     runPlot,
     getInitialPlot,
-    getTheEndPlot
+    getTheEndPlot,
+    getPrimitives
   }
 }
