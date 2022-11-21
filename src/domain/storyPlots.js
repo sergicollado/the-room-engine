@@ -17,7 +17,11 @@ exports.StoryPlots = (plotsConfig) => {
     })
     return plot;
   }
-
+  const removeUsedPlots = (plotAction, targetId) => {
+    plotsConfig = plotsConfig.filter(({action}) => {
+      return action.type !== plotAction || action.target !== targetId
+    });
+  }
   const runPlot = ({action, targetId, place}) => {
     const plots = getPlots(action, targetId);
     if(plots.length === 0) {
@@ -38,7 +42,7 @@ exports.StoryPlots = (plotsConfig) => {
         }
       }
     });
-
+    removeUsedPlots(action, targetId);
     return Response(finalResponse);
   }
 
