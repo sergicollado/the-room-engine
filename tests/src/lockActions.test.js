@@ -97,4 +97,12 @@ describe('Actions requirements and locks', () => {
     const expectMessage = { image: "errorUsingImage", responseDefinition: "ERROR_USING_OBJECT_WITH", text: "it doesn't seem to work"};
     expect(response.getPrimitives()).toStrictEqual(expectMessage);
   })
+
+  test('the player should get suitable info when openable things are already opened', () => {
+    const expectedObjectDescription = {image: "openDoorDescriptionImage", text: "From this door we can now watch a shadow", responseDefinition: ResponseDefinition.SEE_AND_OBJECT};
+    player.open("door");
+    const alreadyOpenedDoorMessage = player.open("door");
+    expect(alreadyOpenedDoorMessage.getPrimitives()).toStrictEqual(expectedObjectDescription);
+  })
+
 });

@@ -56,6 +56,13 @@ const InteractiveObject = (
   const removeFeature = (featureToRemove) => {
     features= features.filter((feature) => feature!==featureToRemove );
   };
+  const getDescription =  () => {
+    if(is(Feature.OPENABLE) && is(Feature.OPEN)) {
+      return Response({...openDescription,responseDefinition: ResponseDefinition.SEE_AND_OBJECT});
+    }
+    const replacedText = sentenceReplacer(description.text);
+    return Response({text:replacedText,image:description.image,responseDefinition: ResponseDefinition.SEE_AND_OBJECT});
+  };
 
   return {
     id,
@@ -69,25 +76,20 @@ const InteractiveObject = (
     getTryToOpenButLockedMessage,
     removeFeature,
     getPrimitives,
+    getDescription,
     open: () => {
       if(is(Feature.LOCKED)) {
         return Response({...getTryToOpenButLockedMessage(), responseDefinition: ResponseDefinition.IS_LOCKED});
       }
-
+      if(is(Feature.OPEN)) {
+        return getDescription();
+      }
       features.push(Feature.OPEN);
       return Response({...getOpenMessage(), responseDefinition: ResponseDefinition.OPEN_MESSAGE});
     },
 
     getMessages: () => {
       return messages;
-    },
-
-    getDescription: () => {
-      if(is(Feature.OPENABLE) && is(Feature.OPEN)) {
-        return Response({...openDescription,responseDefinition: ResponseDefinition.SEE_AND_OBJECT});
-      }
-      const replacedText = sentenceReplacer(description.text);
-      return Response({text:replacedText,image:description.image,responseDefinition: ResponseDefinition.SEE_AND_OBJECT});
     },
 
     getReadableResponse: () => {
