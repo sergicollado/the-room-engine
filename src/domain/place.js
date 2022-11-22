@@ -24,7 +24,8 @@ const Place = ({id, description, smallDescription, objects=[]}) => {
   };
 
   const getObjectsDescription = () => {
-    return objects.map(({smallDescription}) => `${smallDescription.text}`).join(", ");
+    return interactiveObjects.filter(({isNot}) => (isNot(Feature.HIDDEN)))
+    .map(({smallDescription}) => `${smallDescription.text}`).join(", ");
   }
 
   const removeObject = (idObject) => {

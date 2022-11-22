@@ -16,4 +16,17 @@ describe('place', () => {
     expect(place.getObject("toKeep").id).toBe(expectedToKeep);
   });
 
+  it('should remove an interactive object from a place when this object is taken', () => {
+    const place = Place({
+      id:"aPlace",
+      description:"aDescription",
+      smallDescription:"smallDescription",
+      objects:[{id:"toRemove"}, {id:"toKeep"}]
+    });
+
+    const takenObject = place.takeObject("toRemove");
+
+    expect(place.getObject("toRemove")).toBe(undefined);
+    expect(takenObject.getPrimitives().id).toBe("toRemove");
+  });
 });
