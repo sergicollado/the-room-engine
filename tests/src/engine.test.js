@@ -60,7 +60,7 @@ describe('Help', () => {
     description: 'placeTwo description',
     smallDescription: {text:'placeTwo small description',image:""},
     objects: [
-      {id: "book", description: {text:"book description",image:""}, smallDescription: {text:"a book",image:""}},
+      {id: "book", description: {text:"book description",image:""}, smallDescription: {text:"a book",image:""}, features:[Feature.PORTABLE]},
       {id: "key", description: {text:"key description",image:""}, smallDescription: {text:"a key",image:""}},
     ]
   };

@@ -9,7 +9,7 @@ const Place = ({id, description, smallDescription, objects=[]}) => {
 
   const takeObject = (idObject) =>  {
     const toTake = getObject(idObject);
-    if (!toTake) {
+    if (!toTake || toTake.isNot(Feature.PORTABLE)) {
       return;
     }
     removeObject(idObject);

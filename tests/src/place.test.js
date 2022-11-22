@@ -1,4 +1,4 @@
-const { Place } = require("../../src/domain");
+const { Place, Feature } = require("../../src/domain");
 
 describe('place', () => {
   it('should remove an interactive object from a place', () => {
@@ -21,7 +21,7 @@ describe('place', () => {
       id:"aPlace",
       description:"aDescription",
       smallDescription:"smallDescription",
-      objects:[{id:"toRemove"}, {id:"toKeep"}]
+      objects:[{id:"toRemove", features:[Feature.PORTABLE]}, {id:"toKeep"}]
     });
 
     const takenObject = place.takeObject("toRemove");
