@@ -9,6 +9,7 @@ exports.ActionType = {
   SAY: "SAY",
   START: "START",
   THE_END: "END",
-  UNHIDE: "UNHIDE"
+  UNHIDE: "UNHIDE",
+  REMOVE_SIMILAR: "REMOVE_SIMILAR"
 }
 

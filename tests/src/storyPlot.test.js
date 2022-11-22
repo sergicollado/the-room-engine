@@ -5,6 +5,7 @@ const {dialogs:configResponses} = require("./responses");
 describe('Story Plots', () => {
   let scene;
   let player;
+  let engine;
   beforeEach(() => {
     const firstPlace = {
       id : "firstPlace",
@@ -51,6 +52,18 @@ describe('Story Plots', () => {
           smallDescription: {text:"a photo", image:""},
           features: [Feature.HIDDEN]
         },
+        {
+          id: "manual",
+          description: {text:"a manual", image:""},
+          smallDescription: {text:"a manual", image:""},
+          features: [Feature.HIDDEN]
+        },
+        {
+          id: "notebook",
+          description: {text:"a notebook", image:""},
+          smallDescription: {text:"a photo", image:""},
+          features: [Feature.READABLE]
+        },
       ]
     };
 
@@ -73,9 +86,14 @@ describe('Story Plots', () => {
       { action: { type: ActionType.SEE, target: "book"},trigger: { type: ActionType.UNHIDE, target: "photo"}, response: {text: "the book has been seen and the photo is shown", image:"bookImage"}},
       { action: { type: ActionType.THE_END},response: {text: "This is THE END", image:"actionENDImage"}},
       { action: { type: ActionType.READ, target: "book"},trigger: { type: ActionType.THE_END}, response: {text: "this is the END", image:"endImage"}},
+      { action: { type: ActionType.SEE, target: "notebook"},trigger: {type: ActionType.UNHIDE, target: "photo"}, response: {text: "Manual is now visible", image:"manualImage"}},
+      { action: { type: ActionType.SEE, target: "notebook"},trigger: {type: ActionType.REMOVE_SIMILAR, target: ActionType.READ}, response: {text: "Manual is now visible", image:"manualImage"}},
+      { action: { type: ActionType.READ, target: "notebook"},trigger: {type: ActionType.UNHIDE, target: "photo"}, response: {text: "Manual is now visible", image:"manualImage"}},
+      { action: { type: ActionType.READ, target: "notebook"},trigger: {type: ActionType.REMOVE_SIMILAR, target: ActionType.SEE}, response: {text: "Manual is now visible", image:"manualImage"}},
     ]
 
-    scene = TheRoomEngine({configPlaces:{placeList:[firstPlace,secondPlace, thirdPlace]}, configResponses, inventoryConfig, storyPlots}).scene;
+    engine = TheRoomEngine({configPlaces:{placeList:[firstPlace,secondPlace, thirdPlace]}, configResponses, inventoryConfig, storyPlots});
+    scene = engine.scene;
     player = scene.player;
   })
 
@@ -162,4 +180,10 @@ describe('Story Plots', () => {
     expect(message.getPrimitives()).toStrictEqual(expectedWhenUsingMessage);
   })
 
+  test('the engine should remove other related plots', () => {
+    const expectedActionReadPlotResponse =  {text: "Manual is now visible", image:"manualImage","responseDefinition": "PLOT_SUCCESS"};
+    const message = player.read("notebook");
+    expect(message.getPrimitives()).toStrictEqual(expectedActionReadPlotResponse);
+    expect(engine.getPrimitives().storyPlots.find(({action}) => action.type === ActionType.SEE && action.target ==="notebook")).toBe(undefined);
+  })
 });

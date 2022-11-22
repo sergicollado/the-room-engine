@@ -105,7 +105,7 @@ const Scene = ({places, responseController, inventory, plotsController, player, 
   const inventoryHelp = () => {
     const text = inventory.getContentDescription();
     const image = responseController.getResponse(ResponseDefinition.HELP_PLAYER_INVENTORY).image;
-    if(!text) {
+    if(!text || text ==="") {
       return Response({text: "", image}, ResponseDefinition.HELP_PLAYER_INVENTORY );
     }
 

@@ -22,6 +22,22 @@ exports.StoryPlots = (plotsConfig) => {
       return action.type !== plotAction || action.target !== targetId
     });
   }
+  const runTrigger = (trigger ,place, targetId) => {
+    if (trigger.type === ActionType.UNHIDE) {
+      const targetTrigger = place.getHiddenObject(trigger.target);
+      targetTrigger.unhide();
+      return ResponseDefinition.PLOT_SUCCESS;
+    }
+
+    if (trigger.type === ActionType.THE_END) {
+      return ResponseDefinition.THE_END;
+    }
+    if(trigger.type === ActionType.REMOVE_SIMILAR) {
+      removeUsedPlots(trigger.target, targetId);
+      return ResponseDefinition.PLOT_SUCCESS;
+    }
+  }
+
   const runPlot = ({action, targetId, place}) => {
     const plots = getPlots(action, targetId);
     if(plots.length === 0) {
@@ -33,13 +49,7 @@ exports.StoryPlots = (plotsConfig) => {
       finalResponse = response;
       finalResponse.responseDefinition = ResponseDefinition.PLOT_SUCCESS;
       if(trigger) {
-        if (trigger.type === ActionType.UNHIDE) {
-          const targetTrigger = place.getHiddenObject(trigger.target);
-          targetTrigger.unhide();
-        }
-        if (trigger.type === ActionType.THE_END) {
-          finalResponse.responseDefinition = ResponseDefinition.THE_END;
-        }
+        finalResponse.responseDefinition = runTrigger(trigger,place,targetId)
       }
     });
     removeUsedPlots(action, targetId);
