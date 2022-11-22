@@ -48,7 +48,7 @@ const Player = (currentPlace, inventory, responseController) => {
     },
 
     addToInventory: (idObject) => {
-      const toGetObject = place.getObject(idObject);
+      const toGetObject = place.takeObject(idObject);
       if(!toGetObject.is(Feature.PORTABLE)) {
         return responseController.getResponse(ResponseDefinition.CANNOT_SAVE_THIS);
       }

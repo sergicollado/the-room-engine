@@ -154,6 +154,8 @@ describe('Actions in a place', () => {
     const addToInventoryMessage = inventory.add("knife").text;
     expect(addToInventoryMessage).toBe(expectedGetTheObjectMessage);
     expect(inventory.has("knife")).toBe(true);
+    const objectInPlace = scene.getCurrentPlace().getObject("knife");
+    expect(objectInPlace).toBeFalsy();
   })
 
   test('the player return a non portable message if it try to get a noPortable object', () => {

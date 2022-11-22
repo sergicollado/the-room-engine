@@ -7,6 +7,15 @@ const Place = ({id, description, smallDescription, objects=[]}) => {
     return interactiveObjects.find(({id , isNot}) => (id===idObject && isNot(Feature.HIDDEN)));
   };
 
+  const takeObject = (idObject) =>  {
+    const toTake = getObject(idObject);
+    if (!toTake) {
+      return;
+    }
+    removeObject(idObject);
+    return toTake;
+  };
+
   const sentenceReplacer = (sentence) =>  replaceConditionalSentence(sentence,getObject);
   let interactiveObjects = objects.map((element) => interactiveObjectMapper({...element, sentenceReplacer}));
 
@@ -39,11 +48,12 @@ const Place = ({id, description, smallDescription, objects=[]}) => {
     description,
     smallDescription,
     getObject,
+    takeObject,
     getHiddenObject,
     getObjectsDescription,
     removeObject,
     getPrimitives,
-    getDescription
+    getDescription,
   }
 }
 
