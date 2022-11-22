@@ -65,6 +65,15 @@ const InteractiveObject = (
     return Response({text:replacedText,image:description.image,responseDefinition: ResponseDefinition.SEE_AND_OBJECT});
   };
 
+  const getReadableResponse = () => {
+    const {text, image} = readableText || {};
+    let replacedText;
+    if(text) {
+      replacedText = sentenceReplacer(readableText.text);
+    }
+    return Response({text:replacedText, image:image, responseDefinition: ResponseDefinition.READ_AND_OBJECT});
+  };
+
   return {
     id,
     description,
@@ -78,6 +87,7 @@ const InteractiveObject = (
     removeFeature,
     getPrimitives,
     getDescription,
+    getReadableResponse,
     open: () => {
       if(is(Feature.LOCKED)) {
         return Response({...getTryToOpenButLockedMessage(), responseDefinition: ResponseDefinition.IS_LOCKED});
@@ -93,9 +103,6 @@ const InteractiveObject = (
       return messages;
     },
 
-    getReadableResponse: () => {
-      return Response({...readableText, responseDefinition: ResponseDefinition.READ_AND_OBJECT});
-    },
 
     getWhenUsingMessage: () => {
       return Response({...whenUsingMessage, responseDefinition: ResponseDefinition.USING});
