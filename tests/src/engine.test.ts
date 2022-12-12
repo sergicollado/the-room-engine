@@ -1,9 +1,11 @@
-import { TheRoomEngine, Feature, ActionType } from "../../src/domain";
+import { TheRoomEngine, Feature, ActionType, Scene } from "../../src/domain";
+import { PlaceParams } from "../../src/domain/place";
+import { InteractiveObjectConfig } from "../../src/inputConfig/interactiveObjectType";
 import {responses as configResponses} from "./responses";
 
-const firstPlace = {
+const firstPlace: PlaceParams= {
   id : "firstPlace",
-  description : "first place description",
+  description : {text:"first place description"},
   smallDescription: {text:"the First place",image:""},
   objects: [
     {id: "table", description: {text:"first place description", image:""}, smallDescription: {text:"a table",image:""}},
@@ -25,7 +27,7 @@ const firstPlace = {
   },
   ]};
 
-const secondPlace = {
+const secondPlace: PlaceParams = {
     id : "secondPlace",
     description : {text:"secondPlace description",image:""},
     smallDescription: {text:"the Second Place",image:""},
@@ -46,7 +48,7 @@ const placeList = [
   firstPlace, secondPlace
 ]
 describe('Help', () => {
-  const placeOne = {
+  const placeOne: PlaceParams = {
     id: 'placeOne',
     description: {text:'placeOne description',image:""},
     smallDescription: {text:'placeOne small description',image:""},
@@ -55,9 +57,9 @@ describe('Help', () => {
       {id: "door", description: {text:"door description",image:""}, smallDescription: {text:"a door",image:""}},
     ]
   };
-  const placeTwo = {
+  const placeTwo: PlaceParams = {
     id: 'placeTwo',
-    description: 'placeTwo description',
+    description:  {text:'placeTwo description'},
     smallDescription: {text:'placeTwo small description',image:""},
     objects: [
       {id: "book", description: {text:"book description",image:""}, smallDescription: {text:"a book",image:""}, features:[Feature.PORTABLE]},
@@ -66,7 +68,7 @@ describe('Help', () => {
   };
   const placeList = [placeOne, placeTwo];
 
-  const inventoryConfig = [
+  const inventoryConfig:  = [
     {id: "knife", description: {text:"knife description",image:""}, smallDescription: {text:"a knife",image:""},features:[Feature.PORTABLE]},
     {id: "ring", description: {text:"ring description",image:""}, smallDescription: {text:"a ring",image:""}, features:[Feature.PORTABLE]},
   ]
